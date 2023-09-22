@@ -3,14 +3,11 @@
 # and determines if they are balanced.
 
 class Node(object):
-    __data = None
-    __prev = None
-    __next = None
-
     # constructor for Node class
-    def __init__(self):
-        # code goes here
-        pass
+    def __init__(self, data: any):
+        self.data = data
+        self.next: Node | None = None  # next node in list
+        self.prev: Node | None = None  # previous node in list
     
     
 class LinkedList(object):
@@ -36,33 +33,40 @@ class LinkedList(object):
 
 
 class Stack(object):
-    __linkedList = None
-    __top = None
+    __maxSize = 50      # Arbitrary max size to limit scope of project
 
     # constructor for stack class
     def __init__(self):
         # code goes here
-        pass
+        self.__stack = [None] * Stack.__maxSize
+        self.__stackPointer = -1
 
     # push item onto stack
-    def push(self, x):
-        # code goes here
-        pass
+    def push(self, item: any):
+        if self.is_full():
+            raise IndexError("stack is full")
+        else:
+            self.__stackPointer += 1
+            self.__stack[self.__stackPointer] = item
+            print(f"pushed item: {item}")
 
     # pops item from top of stack
-    def pop(self):
-        # code goes here (should return item from top of stack or None if stack is empty)
-        pass
+    def pop(self) -> any:
+        if self.is_empty():
+            raise IndexError("stack is empty")
+        else:
+            item = self.__stack[self.__stackPointer]
+            self.__stackPointer -= 1
+            print(f"popped item: {item}")
+            return item
 
     # returns Boolean of whether stack is currently empty
-    def is_empty(self):
-        # code goes here
-        pass
+    def is_empty(self) -> bool:
+        return self.__stackPointer < 0
 
     # returns Boolean of whether stack is currently full
-    def is_full(self):
-        # code goes here
-        pass
+    def is_full(self) -> bool:
+        return self.__stackPointer + 1 == Stack.__maxSize
 
     # clears the stack
     def clear(self):
@@ -87,3 +91,11 @@ class StackParenthesesChecker(object):
     def is_balanced(self, s):
         # code goes here
         pass
+
+
+if __name__ == "__main__":
+    inputParens = input('Input parenthesises: ')
+    Parens = Stack()
+    for ch in inputParens:
+        if ch == '(' or ch == ')':
+            Parens.push(ch)
