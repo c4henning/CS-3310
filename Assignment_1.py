@@ -52,12 +52,17 @@ class LinkedList(object):
 
     # find node at specified index
     def get_node(self, i):
-        if i < 0 or i >= self.__size:
+        if i < 0 or i > self.__size:
             raise IndexError("Index out of range")
         current = self.__header.next
         for _ in range(i):
             current = current.next
         return current
+
+    def printoTesto(self):
+        for i in range(self.__size):
+            node = self.get_node(i)
+            print(node.data)
 
 
 class Stack(object):
@@ -140,3 +145,4 @@ if __name__ == "__main__":
     lst.add(0, 'cat')
     lst.add(0, 'dog')
     lst.add(0, 'cow')
+    lst.printoTesto()
