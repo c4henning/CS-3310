@@ -2,18 +2,42 @@
 # This program takes an input string of parenthesis, "(" or ")"
 # and determines if they are balanced.
 
+# initialize toggle for verbose output
 verbose = False
 
+
 class Node(object):
-    # constructor for Node class
+    """
+    This class represents a node in a linked list.
+
+    Attributes:
+        data (any): The data stored in the node.
+        next (Node | None): Reference to the next node in the list.
+        prev (Node | None): Reference to the previous node in the list.
+    """
     def __init__(self, data: any = None):
+        """
+        Initializes a new Node instance.
+
+        Args:
+            data (any, optional): The data to be stored in the node. Defaults to None.
+        """
         self.data = data
         self.next: Node | None = None  # next node in list
         self.prev: Node | None = None  # previous node in list
-    
+
 
 class LinkedList(object):
-    __maxSize = 50      # Arbitrary max size to limit scope of project
+    """
+    This class represents a linked list data structure.
+
+    Attributes:
+        __maxSize (int): An arbitrary maximum size to limit the project's scope.
+        __header (Node): The header node of the linked list.
+        __trailer (Node): The trailer node of the linked list.
+        size (int): The current size of the linked list.
+    """
+    __maxSize = 50
 
     # constructor for LinkedList class
     def __init__(self):
@@ -26,12 +50,21 @@ class LinkedList(object):
             print("Initialized Linked List")
 
     # add item x to list at index i
-    def add(self, i: int, new_data: any):
+    def add(self, index: int, new_data: any):
+        """
+        Adds a new Node with data `new_data` to the linked list at index `i`.
+
+        Args:
+            index (int): The index at which to add the new item.
+            new_data (any): The data to be stored in the new node.
+        Raises:
+            IndexError: If the linked list is full (__maxSize is reached).
+        """
         if self.size == self.__maxSize:
             raise IndexError("An attempt to insert was made while Linked List is full")
         else:
             new_node = Node(new_data)
-            next_node = self.get_node(i)
+            next_node = self.get_node(index)
             prev_node = next_node.prev
 
             new_node.next = next_node
@@ -48,11 +81,21 @@ class LinkedList(object):
                       f"\ttype: {type(new_data)}")
 
     # remove item at index i from the list
-    def remove(self, i):
+    def remove(self, index) -> any:
+        """
+        Removes the Node at the specified index in the linked list.
+
+        Args:
+            index (int): The index of the item to be removed.
+        Returns:
+            any: The data stored in the removed node.
+        Raises:
+            IndexError: If the linked list is empty.
+        """
         if self.size == 0:
             raise IndexError("An attempt to delete was made while Linked List is empty")
         else:
-            target_node = self.get_node(i)
+            target_node = self.get_node(index)
             data = target_node.data
 
             next_node = target_node.next
@@ -65,20 +108,39 @@ class LinkedList(object):
             return data
 
     # find node at specified index
-    def get_node(self, i):
+    def get_node(self, index) -> Node:
+        """
+        Finds and returns the Node at the specified index.
+
+        Args:
+            index (int): The index of the Node to retrieve.
+        Returns:
+            Node: The Node at the specified index.
+        Raises:
+            IndexError: If the index is out of range.
+        """
         # support for negative indexing
-        if i < 0:
-            i += self.size + 1
-        if i < 0 or i > self.size:
+        if index < 0:
+            index += self.size + 1
+        if index < 0 or index > self.size:
             raise IndexError("Index out of range")
         current = self.__header.next
-        for _ in range(i):
+        # tabs through list until specified index is reached
+        for _ in range(index):
             current = current.next
         return current
 
 
 class Stack(object):
-    __maxSize = 50      # Arbitrary max size to limit scope of project
+    """
+    A stack data structure with a fixed maximum size.
+
+    Attributes:
+        __maxSize (int): An arbitrary maximum size to limit the project's scope.
+        size (int): The current size of the linked list.
+
+    """
+    __maxSize = 50  # Arbitrary max size to limit scope of project
 
     # constructor for stack class
     def __init__(self):
@@ -90,6 +152,15 @@ class Stack(object):
 
     # push item onto stack
     def push(self, item: any):
+        """
+        Pushes an item onto the top of the stack.
+
+        Args:
+            item (any): The item to be pushed onto the stack.
+
+        Raises:
+            IndexError: If the stack is already full.
+        """
         if self.is_full():
             raise IndexError("stack is full")
         else:
@@ -100,6 +171,15 @@ class Stack(object):
 
     # pops item from top of stack
     def pop(self) -> any:
+        """
+        Pops and returns the item from the top of the stack.
+
+        Returns:
+            any: The item popped from the stack.
+
+        Raises:
+            IndexError: If the stack is empty.
+        """
         if self.is_empty():
             raise IndexError("stack is empty")
         else:
@@ -111,18 +191,42 @@ class Stack(object):
 
     # returns Boolean of whether stack is currently empty
     def is_empty(self) -> bool:
+        """
+        Checks if the stack is currently empty.
+
+        Returns:
+            bool: True if the stack is empty, False otherwise.
+        """
         return self.__stackPointer < 0
 
     # returns Boolean of whether stack is currently full
     def is_full(self) -> bool:
+        """
+        Checks if the stack is currently full.
+
+        Returns:
+            bool: True if the stack is full, False otherwise.
+        """
         return self.__stackPointer + 1 >= Stack.__maxSize
 
     # clears the stack
     def clear(self):
+        """
+        Clears the stack by resetting the stack pointer to -1.
+        """
         self.__stackPointer = -1
 
     # looks at the top item of the stack without removing it
     def peek(self):
+        """
+        Retrieves and returns the item at the top of the stack without removing it.
+
+        Returns:
+            any: The item at the top of the stack.
+
+        Raises:
+            IndexError: If the stack is empty.
+        """
         if self.is_empty():
             raise IndexError("stack is empty")
         else:
