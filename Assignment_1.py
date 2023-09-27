@@ -2,6 +2,8 @@
 # This program takes an input string of parenthesis, "(" or ")"
 # and determines if they are balanced.
 
+verbose = False
+
 class Node(object):
     # constructor for Node class
     def __init__(self, data: any = None):
@@ -20,13 +22,15 @@ class LinkedList(object):
         self.__header.next = self.__trailer
         self.__trailer.prev = self.__header
         self.size = 0
+        if verbose:
+            print("Initialized Linked List")
 
     # add item x to list at index i
-    def add(self, i: int, x: any):
+    def add(self, i: int, new_data: any):
         if self.size == self.__maxSize:
             raise IndexError("An attempt to insert was made while Linked List is full")
         else:
-            new_node = Node(x)
+            new_node = Node(new_data)
             next_node = self.get_node(i)
             prev_node = next_node.prev
 
@@ -38,6 +42,10 @@ class LinkedList(object):
             prev_node.next = new_node
 
             self.size += 1
+            if verbose:
+                print(f"Added Node: {id(new_node)}\n"
+                      f"\twith data: {new_data}\n"
+                      f"\ttype: {type(new_data)}")
 
     # remove item at index i from the list
     def remove(self, i):
@@ -68,13 +76,6 @@ class LinkedList(object):
             current = current.next
         return current
 
-    # debug; kill when done
-    def printoTesto(self):
-        for i in range(self.size):
-            node = self.get_node(i)
-            print(node.data)
-    # end debug
-
 
 class Stack(object):
     __maxSize = 50      # Arbitrary max size to limit scope of project
@@ -84,6 +85,8 @@ class Stack(object):
         # code goes here
         self.__stack = [None] * Stack.__maxSize
         self.__stackPointer = -1
+        if verbose:
+            print("Initialized stack")
 
     # push item onto stack
     def push(self, item: any):
@@ -92,7 +95,8 @@ class Stack(object):
         else:
             self.__stackPointer += 1
             self.__stack[self.__stackPointer] = item
-            print(f"pushed item: {item}")
+            if verbose:
+                print(f"pushed item: {item}")
 
     # pops item from top of stack
     def pop(self) -> any:
@@ -101,7 +105,8 @@ class Stack(object):
         else:
             item = self.__stack[self.__stackPointer]
             self.__stackPointer -= 1
-            print(f"popped item: {item}")
+            if verbose:
+                print(f"popped item: {item}")
             return item
 
     # returns Boolean of whether stack is currently empty
@@ -122,7 +127,8 @@ class Stack(object):
             raise IndexError("stack is empty")
         else:
             item = self.__stack[self.__stackPointer]
-            print(f"top item: {item}")
+            if verbose:
+                print(f"top item: {item}")
             return item
 
 
@@ -133,6 +139,8 @@ class StackParenthesesChecker(object):
 
     # Check if string s has balanced parenthesis
     def is_balanced(self, lst: LinkedList):
+        if verbose:
+            print("Checking if balanced...")
         for _ in range(lst.size):
             try:
                 next_paren = lst.remove(0)
@@ -148,19 +156,22 @@ class StackParenthesesChecker(object):
 
 if __name__ == "__main__":
     while True:
-        inputParens = input('(Q)uit or Input parenthesis: ')
+        inputParens = input("(Q)uit, toggle (V)erbosity, or Input parenthesis: ")
 
         if inputParens.upper() == 'Q':
             break
+        if inputParens.upper() == 'V':
+            verbose ^= True
+            print(f"Verbose mode: {'ON' if verbose else 'OFF'}")
         else:
             Parens = LinkedList()
+            print("--------------------\n"
+                  "Stack implementation")
             for ch in inputParens:
                 if ch == '(' or ch == ')':
                     # add to end of list
                     Parens.add(-1, ch)
 
             result = StackParenthesesChecker()
-            if result.is_balanced(Parens):
-                print("Balanced")
-            else:
-                print("unbalanced")
+            print(f"Result of string '{inputParens}': {'balanced' if result.is_balanced(Parens) else 'unbalanced'}\n"
+                  f"--------------------")
