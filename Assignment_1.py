@@ -39,7 +39,6 @@ class LinkedList(object):
     """
     __maxSize = 50
 
-    # constructor for LinkedList class
     def __init__(self):
         self.__header = Node()
         self.__trailer = Node()
@@ -49,7 +48,6 @@ class LinkedList(object):
         if verbose:
             print("Initialized Linked List")
 
-    # add item x to list at index i
     def add(self, index: int, new_data: any):
         """
         Adds a new Node with data `new_data` to the linked list at index `i`.
@@ -80,7 +78,6 @@ class LinkedList(object):
                       f"\twith data: {new_data}\n"
                       f"\ttype: {type(new_data)}")
 
-    # remove item at index i from the list
     def remove(self, index) -> any:
         """
         Removes the Node at the specified index in the linked list.
@@ -107,7 +104,6 @@ class LinkedList(object):
             self.size -= 1
             return data
 
-    # find node at specified index
     def get_node(self, index) -> Node:
         """
         Finds and returns the Node at the specified index.
@@ -142,15 +138,17 @@ class Stack(object):
     """
     __maxSize = 50  # Arbitrary max size to limit scope of project
 
-    # constructor for stack class
     def __init__(self):
-        # code goes here
-        self.__stack = [None] * Stack.__maxSize
+        """
+        Initializes a new stack with an empty linked list and a stack pointer set to -1.
+
+        If `verbose` is enabled, it prints a message indicating that the stack is initialized.
+        """
+        self.__linked_list = LinkedList()
         self.__stackPointer = -1
         if verbose:
             print("Initialized stack")
 
-    # push item onto stack
     def push(self, item: any):
         """
         Pushes an item onto the top of the stack.
@@ -165,11 +163,10 @@ class Stack(object):
             raise IndexError("stack is full")
         else:
             self.__stackPointer += 1
-            self.__stack[self.__stackPointer] = item
+            self.__linked_list.add(self.__stackPointer, item)
             if verbose:
                 print(f"pushed item: {item}")
 
-    # pops item from top of stack
     def pop(self) -> any:
         """
         Pops and returns the item from the top of the stack.
@@ -183,13 +180,12 @@ class Stack(object):
         if self.is_empty():
             raise IndexError("stack is empty")
         else:
-            item = self.__stack[self.__stackPointer]
+            item = self.__linked_list.remove(self.__stackPointer)
             self.__stackPointer -= 1
             if verbose:
                 print(f"popped item: {item}")
             return item
 
-    # returns Boolean of whether stack is currently empty
     def is_empty(self) -> bool:
         """
         Checks if the stack is currently empty.
@@ -199,7 +195,6 @@ class Stack(object):
         """
         return self.__stackPointer < 0
 
-    # returns Boolean of whether stack is currently full
     def is_full(self) -> bool:
         """
         Checks if the stack is currently full.
@@ -209,14 +204,12 @@ class Stack(object):
         """
         return self.__stackPointer + 1 >= Stack.__maxSize
 
-    # clears the stack
     def clear(self):
         """
         Clears the stack by resetting the stack pointer to -1.
         """
         self.__stackPointer = -1
 
-    # looks at the top item of the stack without removing it
     def peek(self):
         """
         Retrieves and returns the item at the top of the stack without removing it.
@@ -230,7 +223,7 @@ class Stack(object):
         if self.is_empty():
             raise IndexError("stack is empty")
         else:
-            item = self.__stack[self.__stackPointer]
+            item = self.__linked_list.get_node(self.__stackPointer).data
             if verbose:
                 print(f"top item: {item}")
             return item
