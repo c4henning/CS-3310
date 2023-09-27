@@ -11,58 +11,69 @@ class Node(object):
     
 
 class LinkedList(object):
+    __maxSize = 50      # Arbitrary max size to limit scope of project
+
     # constructor for LinkedList class
     def __init__(self):
         self.__header = Node()
         self.__trailer = Node()
         self.__header.next = self.__trailer
         self.__trailer.prev = self.__header
-        self.__size = 0
+        self.size = 0
 
     # add item x to list at index i
     def add(self, i: int, x: any):
-        if i < 0 or i > self.__size:
-            raise IndexError("Index out of range")
-        new_node = Node(x)
-        next_node = self.get_node(i)
-        prev_node = next_node.prev
+        if self.size == self.__maxSize:
+            raise IndexError("An attempt to insert was made while Linked List is full")
+        else:
+            new_node = Node(x)
+            next_node = self.get_node(i)
+            prev_node = next_node.prev
 
-        new_node.next = next_node
-        new_node.prev = prev_node
+            new_node.next = next_node
+            new_node.prev = prev_node
 
-        next_node.prev = new_node
+            next_node.prev = new_node
 
-        prev_node.next = new_node
+            prev_node.next = new_node
 
-        self.__size += 1
+            self.size += 1
 
     # remove item at index i from the list
     def remove(self, i):
-        target_node = self.get_node(i)
-        data = target_node.data
+        if self.size == 0:
+            raise IndexError("An attempt to delete was made while Linked List is empty")
+        else:
+            target_node = self.get_node(i)
+            data = target_node.data
 
-        next_node = target_node.next
-        prev_node = target_node.prev
-        next_node.prev = prev_node
-        prev_node.next = next_node
+            next_node = target_node.next
+            prev_node = target_node.prev
+            next_node.prev = prev_node
+            prev_node.next = next_node
 
-        del target_node
-        self.__size -= 1
-        return data
+            del target_node
+            self.size -= 1
+            return data
 
     # find node at specified index
     def get_node(self, i):
-        if i < 0 or i > self.__size:
+        # support for negative indexing
+        if i < 0:
+            i += self.size + 1
+        if i < 0 or i > self.size:
             raise IndexError("Index out of range")
         current = self.__header.next
         for _ in range(i):
             current = current.next
         return current
 
+    # debug; kill when done
     def printoTesto(self):
-        for i in range(self.__size):
+        for i in range(self.size):
             node = self.get_node(i)
             print(node.data)
+    # end debug
 
 
 class Stack(object):
@@ -116,33 +127,40 @@ class Stack(object):
 
 
 class StackParenthesesChecker(object):
-    __stack = None
-
     # constructor for StackParenthesesChecker class
     def __init__(self):
-        # code goes here
-        pass
-    
+        self.__stack = Stack()
+
     # Check if string s has balanced parenthesis
-    def is_balanced(self, s):
-        # code goes here
-        pass
+    def is_balanced(self, lst: LinkedList):
+        for _ in range(lst.size):
+            try:
+                next_paren = lst.remove(0)
+                if next_paren == '(':
+                    self.__stack.push(next_paren)
+                elif next_paren == ')':
+                    self.__stack.pop()
+            except IndexError:
+                return False
+
+        return self.__stack.is_empty()
 
 
 if __name__ == "__main__":
-#     while True:
-#         inputParens = input('(Q)uit or Input parenthesis: ')
-#
-#         if inputParens.upper() != 'Q':
-#             Parens = LinkedList()
-#             for ch in inputParens:
-#                 if ch == '(' or ch == ')':
-#                     Parens.add(ch, 0)
-#         else:
-#             break
+    while True:
+        inputParens = input('(Q)uit or Input parenthesis: ')
 
-    lst = LinkedList()
-    lst.add(0, 'cat')
-    lst.add(0, 'dog')
-    lst.add(0, 'cow')
-    lst.printoTesto()
+        if inputParens.upper() == 'Q':
+            break
+        else:
+            Parens = LinkedList()
+            for ch in inputParens:
+                if ch == '(' or ch == ')':
+                    # add to end of list
+                    Parens.add(-1, ch)
+
+            result = StackParenthesesChecker()
+            if result.is_balanced(Parens):
+                print("Balanced")
+            else:
+                print("unbalanced")
