@@ -47,7 +47,7 @@ class LinkedList(object):
         self.__trailer.prev = self.__header
         self.size = 0
         if verbose:
-            print("Initialized Linked List")
+            print("Initialized Linked List:", id(self))
 
     def add(self, index: int, new_data: any):
         """
@@ -76,6 +76,7 @@ class LinkedList(object):
             self.size += 1
             if verbose:
                 print(f"Added Node: {id(new_node)}\n"
+                      f"\tto parent list: {id(self)}\n"
                       f"\twith data: {new_data}\n"
                       f"\ttype: {type(new_data)}")
 
@@ -101,6 +102,9 @@ class LinkedList(object):
             next_node.prev = prev_node
             prev_node.next = next_node
 
+            if verbose:
+                print(f"Removed Node: {id(target_node)}\n"
+                      f"\tfrom parent list: {id(self)}")
             del target_node
             self.size -= 1
             return data
@@ -148,7 +152,7 @@ class Stack(object):
         self.__linked_list = LinkedList()
         self.__stackPointer = -1
         if verbose:
-            print("Initialized stack")
+            print("Initialized Stack:", id(self))
 
     def push(self, item: any):
         """
@@ -166,7 +170,8 @@ class Stack(object):
             self.__stackPointer += 1
             self.__linked_list.add(self.__stackPointer, item)
             if verbose:
-                print(f"pushed item: {item}")
+                print(f"Pushed item: {item}\n"
+                      f"\tto Stack: {id(self)}")
 
     def pop(self) -> any:
         """
@@ -184,7 +189,8 @@ class Stack(object):
             item = self.__linked_list.remove(self.__stackPointer)
             self.__stackPointer -= 1
             if verbose:
-                print(f"popped item: {item}")
+                print(f"Popped item: {item}\n"
+                      f"\tfrom Stack: {id(self)}")
             return item
 
     def is_empty(self) -> bool:
@@ -282,7 +288,7 @@ if __name__ == "__main__":
             break
         if inputParens.upper() == 'V':
             verbose ^= True
-            print(f"Verbose mode: {'ON' if verbose else 'OFF'}")
+            print(f"Verbose mode: {'ON' if verbose else 'OFF'}\n")
         else:
             Parens = LinkedList()
             print("--------------------\n"
@@ -294,4 +300,4 @@ if __name__ == "__main__":
 
             result = StackParenthesesChecker()
             print(f"Result of string '{inputParens}': {'balanced' if result.is_balanced(Parens) else 'unbalanced'}\n"
-                  f"--------------------")
+                  f"--------------------\n")
