@@ -347,17 +347,17 @@ if __name__ == "__main__":
             print(f"Verbose mode: {'ON' if verbose else 'OFF'}\n")
         else:
             Parens = LinkedList()
-            print("--------------------\n"
-                  "Stack implementation")
             for ch in inputParens:
                 if ch == '(' or ch == ')':
                     # add to end of list
                     Parens.add(-1, ch)
 
+            print("\n--------------------\n"
+                  "Stack implementation")
             result = StackParenthesesChecker()
-            print(f"Result of string '{inputParens}': {'balanced' if result.is_balanced(Parens) else 'unbalanced'}\n"
-                  f"--------------------\n")
+            print(f"Result of string '{inputParens}': {'balanced' if result.is_balanced(Parens) else 'unbalanced'}")
 
+            print("Queue implementation")
             result = QueueParenthesesChecker()
-            print(f"Result of string '{inputParens}': {'balanced' if result.is_balanced(Parens) else 'unbalanced'}\n"
-                  f"--------------------\n")
+            print(f"Result of string '{inputParens}': {'balanced' if result.is_balanced(Parens) else 'unbalanced'}"
+                  f"\n--------------------\n")
