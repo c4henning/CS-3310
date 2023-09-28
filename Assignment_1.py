@@ -146,8 +146,6 @@ class Stack(object):
     def __init__(self):
         """
         Initializes a new stack with an empty linked list and a stack pointer set to -1.
-
-        If `verbose` is enabled, it prints a message indicating that the stack is initialized.
         """
         self.__linked_list = LinkedList()
         self.__stackPointer = -1
@@ -250,12 +248,12 @@ class StackParenthesesChecker(object):
         self.__stack = Stack()
 
     # Check if string s has balanced parenthesis
-    def is_balanced(self, lst: LinkedList):
+    def is_balanced(self, string: str):
         """
         Checks if the given linked list of parentheses is balanced.
 
         Args:
-            lst (LinkedList): The linked list containing the parentheses to be checked.
+            string (str): The string containing the parentheses to be checked.
 
         Returns:
             bool: True if the parentheses are balanced, False otherwise.
@@ -265,12 +263,11 @@ class StackParenthesesChecker(object):
             print("Checking if balanced...")
 
         # Loop through the linked list and process each parenthesis
-        for _ in range(lst.size):
+        for paren in string:
             try:
-                next_paren = lst.remove(0)
-                if next_paren == '(':
-                    self.__stack.push(next_paren)
-                elif next_paren == ')':
+                if paren == '(':
+                    self.__stack.push(paren)
+                elif paren == ')':
                     # If a closing parenthesis is encountered, pop from the stack
                     self.__stack.pop()
             except IndexError:
@@ -299,7 +296,7 @@ class Queue(object):
         self.__front = 0
         self.__rear = -1
         if verbose:
-            print("Initialized queue")
+            print("Initialized Queue", id(self))
 
     def enqueue(self, item):
         """
@@ -386,42 +383,46 @@ class Queue(object):
 
 
 class QueueParenthesesChecker(object):
-    __queue1 = None
-    __queue2 = None
 
-    # constructor for QueueParenthesesChecker class
     def __init__(self):
-        # code goes here
-        pass
+        self.__queue = Queue()
 
-    # Check if string s has balanced parenthesis
-    def is_balanced(self, s):
-        # code goes here
-        pass
+    def is_balanced(self, string: str):
+        if verbose:
+            print("Checking if balanced...")
+
+        # Loop through the linked list and process each parenthesis
+        for paren in string:
+            try:
+                if paren == '(':
+                    self.__queue.enqueue(paren)
+                elif paren == ')':
+                    # If a closing parenthesis is encountered, pop from the stack
+                    self.__queue.dequeue()
+            except IndexError:
+                # An IndexError occurs if there's a mismatched closing parenthesis
+                return False
+
+        # The stack should be empty if all parentheses are balanced
+        return self.__queue.is_empty()
 
 
 if __name__ == "__main__":
     while True:
-        inputParens = input("(Q)uit, toggle (V)erbosity, or Input parenthesis: ")
+        parens = input("(Q)uit, toggle (V)erbosity, or Input parenthesis: ")
 
-        if inputParens.upper() == 'Q':
+        if parens.upper() == 'Q':
             break
-        if inputParens.upper() == 'V':
+        if parens.upper() == 'V':
             verbose ^= True
             print(f"Verbose mode: {'ON' if verbose else 'OFF'}\n")
         else:
-            Parens = LinkedList()
-            for ch in inputParens:
-                if ch == '(' or ch == ')':
-                    # add to end of list
-                    Parens.add(-1, ch)
-
             print("\n--------------------\n"
                   "Stack implementation")
-            result = StackParenthesesChecker()
-            print(f"Result of string '{inputParens}': {'balanced' if result.is_balanced(Parens) else 'unbalanced'}")
-
+            stackResult = StackParenthesesChecker()
+            print(f"Result of string '{parens}': {'balanced' if stackResult.is_balanced(parens) else 'unbalanced'}")
             print("Queue implementation")
-            result = QueueParenthesesChecker()
-            print(f"Result of string '{inputParens}': {'balanced' if result.is_balanced(Parens) else 'unbalanced'}"
+            queueResult = QueueParenthesesChecker()
+            print(f"Result of string '{parens}': {'balanced' if queueResult.is_balanced(parens) else 'unbalanced'}"
                   f"\n--------------------\n")
+
