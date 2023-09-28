@@ -228,7 +228,8 @@ class Stack(object):
             IndexError: If the stack is empty.
         """
         if self.is_empty():
-            raise IndexError("stack is empty")
+            print("stack is empty")
+            return None
         else:
             item = self.__linked_list.get_node(self.__stackPointer).data
             if verbose:
@@ -281,44 +282,107 @@ class StackParenthesesChecker(object):
 
 
 class Queue(object):
-    __linkedList = None
-    __front = None
-    __rear = None
-    
-    # constructor for Queue class
+    """
+    A queue data structure with a fixed maximum size.
+
+    Attributes:
+        __maxSize (int): An arbitrary maximum size to limit the project's scope.
+        __linked_list (LinkedList): A linked list used to store items in the queue.
+        __front (int): The current index of the front of the queue.
+        __rear (int): The current index of the rear of the queue.
+
+    """
+    __maxSize = 50  # Arbitrary max size to limit scope of project
+
     def __init__(self):
-        # code goes here
-        pass
-    
-    # adds item to front of queue
-    def enqueue(self, x):
-        # code goes here
-        pass
+        self.__linked_list = LinkedList()
+        self.__front = 0
+        self.__rear = -1
+        if verbose:
+            print("Initialized queue")
 
-    # removes item from rear of queue
+    def enqueue(self, item):
+        """
+        Adds an item to the rear of the queue.
+
+        Args:
+            item (any): The item to be added to the queue.
+
+        Raises:
+            IndexError: If the queue is already full.
+        """
+        if self.is_full():
+            raise IndexError("queue is full")
+        else:
+            self.__rear += 1
+            self.__linked_list.add(self.__rear, item)
+            if verbose:
+                print(f"Added item: {item}\n"
+                      f"\tto Queue: {id(self)}")
+
     def dequeue(self):
-        # code goes here (should return item from end of queue or None if queue is empty)
-        pass
+        """
+        Removes and returns the item from the front of the queue.
 
-    # returns Boolean of whether queue is currently empty
+        Returns:
+            any: The item removed from the queue.
+
+        Raises:
+            IndexError: If the queue is empty.
+        """
+        if self.is_empty():
+            raise IndexError("queue is empty")
+        else:
+            item = self.__linked_list.remove(self.__front)
+            self.__front += 1
+            if verbose:
+                print(f"Removed item: {item}\n"
+                      f"\tfrom Queue: {id(self)}")
+            return item
+
     def is_empty(self):
-        # code goes here
-        pass
+        """
+        Checks if the queue is empty.
 
-    # returns Boolean of whether queue is currently full
+        Returns:
+            bool: True if the queue is empty, False otherwise.
+        """
+        return self.__front > self.__rear
+
     def is_full(self):
-        # code goes here
-        pass
+        """
+        Checks if the queue is currently full.
 
-    # clears the queue
+        Returns:
+            bool: True if the queue is full, False otherwise.
+        """
+        return self.__rear - self.__front >= Queue.__maxSize
+
     def clear(self):
-        # code goes here
-        pass
+        """
+        Clears the queue by replacing it with a new empty linked list and resetting the pointers.
+        """
+        del self.__linked_list
+        self.__linked_list = LinkedList()
+        self.__front = 0
+        self.__rear = -1
 
-    # looks at the item at the end of the queue without removing it
     def poll(self):
-        # code goes here
-        pass
+        """
+        Retrieves and returns the item at the front of the queue without removing it.
+
+        Returns:
+            any: The item at the front of the queue, None if the queue is empty.
+        """
+        if self.is_empty():
+            if verbose:
+                print("queue is empty")
+            return None
+        else:
+            item = self.__linked_list.get_node(self.__front).data
+            if verbose:
+                print(f"first in queue: {item}")
+            return item
 
 
 class QueueParenthesesChecker(object):
