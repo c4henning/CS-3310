@@ -15,6 +15,7 @@ class Node(object):
         next (Node | None): Reference to the next node in the list.
         prev (Node | None): Reference to the previous node in the list.
     """
+
     def __init__(self, data: any = None):
         """
         Initializes a new Node instance.
@@ -133,7 +134,7 @@ class Stack(object):
 
     Attributes:
         __maxSize (int): An arbitrary maximum size to limit the project's scope.
-        size (int): The current size of the linked list.
+        __stackPointer (int): The current index of the top of stack.
 
     """
     __maxSize = 50  # Arbitrary max size to limit scope of project
@@ -230,24 +231,46 @@ class Stack(object):
 
 
 class StackParenthesesChecker(object):
-    # constructor for StackParenthesesChecker class
+    """
+    A class for checking balanced parentheses using a stack data structure.
+
+    Attributes:
+        __stack (Stack): An instance of the Stack class used for storing parentheses.
+
+    """
+
     def __init__(self):
         self.__stack = Stack()
 
     # Check if string s has balanced parenthesis
     def is_balanced(self, lst: LinkedList):
+        """
+        Checks if the given linked list of parentheses is balanced.
+
+        Args:
+            lst (LinkedList): The linked list containing the parentheses to be checked.
+
+        Returns:
+            bool: True if the parentheses are balanced, False otherwise.
+
+        """
         if verbose:
             print("Checking if balanced...")
+
+        # Loop through the linked list and process each parenthesis
         for _ in range(lst.size):
             try:
                 next_paren = lst.remove(0)
                 if next_paren == '(':
                     self.__stack.push(next_paren)
                 elif next_paren == ')':
+                    # If a closing parenthesis is encountered, pop from the stack
                     self.__stack.pop()
             except IndexError:
+                # An IndexError occurs if there's a mismatched closing parenthesis
                 return False
 
+        # The stack should be empty if all parentheses are balanced
         return self.__stack.is_empty()
 
 
