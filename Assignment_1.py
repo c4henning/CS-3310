@@ -280,6 +280,62 @@ class StackParenthesesChecker(object):
         return self.__stack.is_empty()
 
 
+class Queue(object):
+    __linkedList = None
+    __front = None
+    __rear = None
+    
+    # constructor for Queue class
+    def __init__(self):
+        # code goes here
+        pass
+    
+    # adds item to front of queue
+    def enqueue(self, x):
+        # code goes here
+        pass
+
+    # removes item from rear of queue
+    def dequeue(self):
+        # code goes here (should return item from end of queue or None if queue is empty)
+        pass
+
+    # returns Boolean of whether queue is currently empty
+    def is_empty(self):
+        # code goes here
+        pass
+
+    # returns Boolean of whether queue is currently full
+    def is_full(self):
+        # code goes here
+        pass
+
+    # clears the queue
+    def clear(self):
+        # code goes here
+        pass
+
+    # looks at the item at the end of the queue without removing it
+    def poll(self):
+        # code goes here
+        pass
+
+
+class QueueParenthesesChecker(object):
+    __queue1 = None
+    __queue2 = None
+
+    # constructor for QueueParenthesesChecker class
+    def __init__(self):
+        # code goes here
+        pass
+
+    # Check if string s has balanced parenthesis
+    def is_balanced(self, s):
+        # code goes here
+        pass
+
+
 if __name__ == "__main__":
     while True:
         inputParens = input("(Q)uit, toggle (V)erbosity, or Input parenthesis: ")
@@ -299,5 +355,9 @@ if __name__ == "__main__":
                     Parens.add(-1, ch)
 
             result = StackParenthesesChecker()
+            print(f"Result of string '{inputParens}': {'balanced' if result.is_balanced(Parens) else 'unbalanced'}\n"
+                  f"--------------------\n")
+
+            result = QueueParenthesesChecker()
             print(f"Result of string '{inputParens}': {'balanced' if result.is_balanced(Parens) else 'unbalanced'}\n"
                   f"--------------------\n")
