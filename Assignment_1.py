@@ -440,6 +440,7 @@ if __name__ == "__main__":
         parens = input("(Q)uit, toggle (V)erbosity, or Input parenthesis: ")
 
         if parens.upper() == 'Q':
+            print("Goodbye!")
             break
 
         # XOR will toggle the verbose debugging mode
