@@ -2,7 +2,8 @@
 # This program takes an input string of parenthesis, "(" or ")"
 # and determines if they are balanced.
 
-# initialize toggle for verbose output
+# Initialize toggle for verbose output. If toggled (by user in main loop), it
+# will print various debugging statements that report the actions of functions
 verbose = False
 
 
@@ -198,7 +199,10 @@ class Stack(object):
         Returns:
             bool: True if the stack is empty, False otherwise.
         """
-        return self.__stackPointer < 0
+        result = self.__stackPointer < 0
+        if verbose:
+            print(f"Is stack {id(self)} empty?", result)
+        return result
 
     def is_full(self) -> bool:
         """
@@ -207,7 +211,10 @@ class Stack(object):
         Returns:
             bool: True if the stack is full, False otherwise.
         """
-        return self.__stackPointer + 1 >= Stack.__maxSize
+        result = self.__stackPointer + 1 >= Stack.__maxSize
+        if verbose:
+            print(f"Is stack {id(self)} full?", result)
+        return result
 
     def clear(self):
         """
@@ -226,7 +233,6 @@ class Stack(object):
             IndexError: If the stack is empty.
         """
         if self.is_empty():
-            print("stack is empty")
             return None
         else:
             item = self.__linked_list.get_node(self.__stackPointer).data
@@ -247,7 +253,6 @@ class StackParenthesesChecker(object):
     def __init__(self):
         self.__stack = Stack()
 
-    # Check if string s has balanced parenthesis
     def is_balanced(self, string: str):
         """
         Checks if the given linked list of parentheses is balanced.
@@ -333,7 +338,7 @@ class Queue(object):
             item = self.__linked_list.get_node(self.__front)
             self.__front += 1
             if verbose:
-                print(f"Removed item: {item}\n"
+                print(f"Removed item: {item.data}\n"
                       f"\tfrom Queue: {id(self)}")
             return item
 
@@ -344,7 +349,10 @@ class Queue(object):
         Returns:
             bool: True if the queue is empty, False otherwise.
         """
-        return self.__front > self.__rear
+        result = self.__front > self.__rear
+        if verbose:
+            print(f"Is queue {id(self)} empty?", result)
+        return result
 
     def is_full(self):
         """
@@ -353,7 +361,10 @@ class Queue(object):
         Returns:
             bool: True if the queue is full, False otherwise.
         """
-        return self.__rear - self.__front >= Queue.__maxSize
+        result = self.__rear - self.__front >= Queue.__maxSize
+        if verbose:
+            print(f"Is queue {id(self)} full?", result)
+        return result
 
     def clear(self):
         """
@@ -372,8 +383,6 @@ class Queue(object):
             any: The item at the front of the queue, None if the queue is empty.
         """
         if self.is_empty():
-            if verbose:
-                print("queue is empty")
             return None
         else:
             item = self.__linked_list.get_node(self.__front).data
@@ -383,11 +392,28 @@ class Queue(object):
 
 
 class QueueParenthesesChecker(object):
+    """
+    A class for checking balanced parentheses using a queue data structure.
+
+    Attributes:
+        __queue (Queue): An instance of the Queue class used for storing parentheses.
+
+    """
 
     def __init__(self):
         self.__queue = Queue()
 
     def is_balanced(self, string: str):
+        """
+        Checks if the given linked list of parentheses is balanced.
+
+        Args:
+            string (str): The string containing the parentheses to be checked.
+
+        Returns:
+            bool: True if the parentheses are balanced, False otherwise.
+
+        """
         if verbose:
             print("Checking if balanced...")
 
@@ -407,22 +433,30 @@ class QueueParenthesesChecker(object):
         return self.__queue.is_empty()
 
 
+# Main loop. This is where the initial calls are made and inputs are taken
 if __name__ == "__main__":
+    # Loop continues until (Q)uit command is issued
     while True:
         parens = input("(Q)uit, toggle (V)erbosity, or Input parenthesis: ")
 
         if parens.upper() == 'Q':
             break
+
+        # XOR will toggle the verbose debugging mode
         if parens.upper() == 'V':
             verbose ^= True
             print(f"Verbose mode: {'ON' if verbose else 'OFF'}\n")
-        else:
-            print("\n--------------------\n"
-                  "Stack implementation")
-            stackResult = StackParenthesesChecker()
-            print(f"Result of string '{parens}': {'balanced' if stackResult.is_balanced(parens) else 'unbalanced'}")
-            print("Queue implementation")
-            queueResult = QueueParenthesesChecker()
-            print(f"Result of string '{parens}': {'balanced' if queueResult.is_balanced(parens) else 'unbalanced'}"
-                  f"\n--------------------\n")
 
+        else:
+            print(f"\n"
+                  f"╒══════════════════════════════\n"
+                  f"│ Stack implementation")
+            stackResult = StackParenthesesChecker()
+            print(f"│ Result of string '{parens}':\n"
+                  f"│ \t{'balanced' if stackResult.is_balanced(parens) else 'unbalanced'}")
+            print(f"├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶\n"
+                  f"│ Queue implementation")
+            queueResult = QueueParenthesesChecker()
+            print(f"│ Result of string '{parens}':\n"
+                  f"│ \t{'balanced' if queueResult.is_balanced(parens) else 'unbalanced'}\n"
+                  f"└────────────────────\n")
