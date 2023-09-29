@@ -330,7 +330,7 @@ class Queue(object):
         if self.is_empty():
             raise IndexError("queue is empty")
         else:
-            item = self.__linked_list.remove(self.__front)
+            item = self.__linked_list.get_node(self.__front)
             self.__front += 1
             if verbose:
                 print(f"Removed item: {item}\n"
