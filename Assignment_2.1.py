@@ -4,7 +4,7 @@ import heapq
 
 
 class Node:
-    def __init__(self, char, freq):
+    def __init__(self, char: str | None, freq: int):
         self.char = char
         self.freq = freq
         self.left = None
@@ -15,7 +15,7 @@ class Node:
         return self.freq < other.freq
 
 
-def build_huffman_tree(chars, freq):
+def create_huffman_tree(chars: list, freq: list) -> Node:
     heap = [Node(c, f) for c, f in zip(chars, freq)]
     heapq.heapify(heap)
 
@@ -30,7 +30,7 @@ def build_huffman_tree(chars, freq):
     return heap[0]
 
 
-def build_huffman_codes(root, code="", mapping=None):
+def create_huffman_codes(root, code="", mapping=None) -> dict:
     # Step 4: Traverse the Huffman tree to assign codes
     if mapping is None:
         mapping = {}
@@ -38,9 +38,9 @@ def build_huffman_codes(root, code="", mapping=None):
     if root.char:
         mapping[root.char] = (code, len(code))
     if root.left:
-        build_huffman_codes(root.left, code + "0", mapping)
+        create_huffman_codes(root.left, code + "0", mapping)
     if root.right:
-        build_huffman_codes(root.right, code + "1", mapping)
+        create_huffman_codes(root.right, code + "1", mapping)
 
     return mapping
 
@@ -70,6 +70,8 @@ chars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', '
 freq = [77, 17, 32, 42, 120, 24, 17, 50, 76, 4, 7, 42, 24, 67, 67, 20, 5, 59, 67, 85, 37, 12, 22, 4, 22, 2]
 
 if __name__ == '__main__':
-    huffman_tree = build_huffman_tree(chars, freq)
-    huffman_codes = build_huffman_codes(huffman_tree)
+    huffman_tree = create_huffman_tree(chars, freq)
+    huffman_codes = create_huffman_codes(huffman_tree)
     print_output(chars, freq, huffman_codes)
+    for key in huffman_codes:
+        print(f"{key}: {huffman_codes[key]}")
