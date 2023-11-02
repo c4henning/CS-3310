@@ -52,21 +52,23 @@ def create_huffman_tree(freq: list, chars: list) -> Node:
     return heap[0]
 
 
-def create_huffman_codes(root, code="", mapping=None) -> dict:
+def create_huffman_codes(root: Node, code="", huff_dict=None) -> dict:
     # Traverse the Huffman tree to assign codes
-    if mapping is None:
-        mapping = {}
+
+    # first iter, instantiate dict
+    if huff_dict is None:
+        huff_dict = {}
 
     # Preorder traversal for copying of the tree's contents
     # uses recursion for nodes
     if root.char:
-        mapping[root.char] = (code, len(code))
+        huff_dict[root.char] = code
     if root.left:
-        create_huffman_codes(root.left, code + "0", mapping)
+        create_huffman_codes(root.left, code + "0", huff_dict)
     if root.right:
-        create_huffman_codes(root.right, code + "1", mapping)
+        create_huffman_codes(root.right, code + "1", huff_dict)
 
-    return mapping
+    return huff_dict
 
 
 def print_output(freq: list, chars: list, codes: dict):
@@ -79,8 +81,11 @@ def print_output(freq: list, chars: list, codes: dict):
         # match char to freq with index
         frequency = freq[chars.index(char)]
 
-        # unpack dict
-        code, length = codes[char]
+        # unpack from dict
+        code = codes[char]
+
+        # calculate length
+        length = len(code)
 
         # calculate min path length
         freq_x_len = frequency * length
@@ -90,7 +95,7 @@ def print_output(freq: list, chars: list, codes: dict):
 
     # Output the weighted minimum path length
     print(f"╞════════╧═══════════╧══════════╧════════╧════════════╡\n"
-          f"│ The weighted minimum path length is: {weighted_min_path_length: <14} │\n"
+          f"│ The weighted minimum path length is: {weighted_min_path_length: >10}     │\n"
           f"╰─────────────────────────────────────────────────────╯")
 
 
