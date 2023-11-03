@@ -1,4 +1,6 @@
 # CS 3310 Assignment 3 by Christian Henning
+# This program implements the Huffman Codes algorithm, and displays
+# the resulting table with the resulting weighted minimum path length.
 
 import heapq
 
@@ -9,58 +11,121 @@ chars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', '
 
 
 class Node:
+    """
+    This class represents a Node in a Huffman tree.
+
+    Args:
+        freq (int): Frequency of the character.
+        char (any | None): The character associated with the node (if any).
+        left (Node | None): Left child node.
+        right (Node | None): Right child node.
+    """
     def __init__(self, freq: int, char: any = None, left: 'Node' = None, right: 'Node' = None):
-        # freq first as the only required arg
-        # char (and left/right) is optional
+        # freq comes first as it is the only required argument
+        # char, left, and right are optional arguments
         self.freq = freq
         self.char = char
         self.left = left
         self.right = right
 
     def __str__(self):
+        """
+        Convert the Node (and all children) to a string representation.
+        """
         return self._str_helper(self)
 
     def _str_helper(self, node, depth=0):
-        # makes a nicely formatted, visual row hierarchy
+        """
+        Helper function for creating a visual representation of the tree structure.
+
+        Args:
+            node (Node): Current node.
+            depth (int): Depth of the current node in the tree.
+
+        Returns:
+            str: String representation of the node and its children.
+        """
+        # Base case for recursion exit
         if node is None:
             return ""
 
+        # Adds indentation for every level down the tree
         indent = "│   " * depth
-        # preorder traverse w/ recursion
+
+        # Here we use a preorder traversal w/ recursion
         result = f"{indent}freq: {node.freq}, char: {node.char}\n"
         result += self._str_helper(node.left, depth + 1)
         result += self._str_helper(node.right, depth + 1)
+
         return result
 
     def __lt__(self, other: 'Node'):
-        # Define a custom comparison method for Node instances
+        """
+        Custom less-than comparison method for Node instances based on freq.
+
+        Args:
+            other (Node): Another Node instance to compare against.
+
+        Returns:
+            bool: True if the frequency of the current node is less than the frequency of the other node.
+        """
         return self.freq < other.freq
 
 
 def create_huffman_tree(freq: list, chars: list) -> Node:
+    """
+    Creates a Huffman tree from the given lists of frequencies and characters.
+
+    Args:
+        freq (list): List of integers representing the frequencies of characters.
+        chars (list): List of characters corresponding to their frequencies.
+
+    Returns:
+        Node: The root of the Huffman tree.
+    """
+    # Create a list of Node instances for each character and its frequency
     heap = [Node(f, c) for f, c in zip(freq, chars)]
+    # Convert the list into a min-heap
     heapq.heapify(heap)
 
+    # Build the Huffman tree by merging nodes with the smallest frequencies
     while len(heap) > 1:
-        node1 = heapq.heappop(heap)
-        node2 = heapq.heappop(heap)
+        node1 = heapq.heappop(heap)     # Current smallest
+        node2 = heapq.heappop(heap)     # 2nd smallest
+
+        # Create a new node with the sum of frequencies
         merged_node = Node(node1.freq + node2.freq)
+        # Assign left and right children
         merged_node.left = node1
         merged_node.right = node2
+        # Push the merged node back onto our min-heap
         heapq.heappush(heap, merged_node)
 
+    # The root of the Huffman tree is the only remaining node in the heap
     return heap[0]
 
 
 def create_huffman_codes(root: Node, code="", huff_dict=None) -> dict:
-    # Traverse the Huffman tree to assign codes
+    """
+    Traverse the Huffman tree and assign binary codes to each character.
 
-    # first iter, instantiate dict
+    Each element in the resulting dict is a key-value pair where the key is the alpha `char`
+    and the value is the composed binary huffman code.
+
+    Args:
+        root (Node): The root of the Huffman tree.
+        code (str): The binary code assigned to the current node. (Used in recursive case only)
+        huff_dict (dict): A dictionary to store the Huffman codes. (Used in recursive case only)
+
+    Returns:
+        dict: A dictionary where keys are characters and values are their corresponding Huffman codes.
+    """
+    # Instantiate the dictionary if not provided (i.e. first pass before recursion)
     if huff_dict is None:
         huff_dict = {}
 
     # Preorder traversal for copying of the tree's contents
-    # uses recursion for nodes
+    # Uses recursion for nodes
     if root.char:
         huff_dict[root.char] = code
     if root.left:
@@ -72,22 +137,32 @@ def create_huffman_codes(root: Node, code="", huff_dict=None) -> dict:
 
 
 def print_output(freq: list, chars: list, codes: dict):
-    # Output the results
+    """
+    Output the Huffman coding results alphabetically with the weighted minimum path length in a table.
+
+    Args:
+        freq (list): List of integers representing the frequencies of characters.
+        chars (list): List of characters corresponding to their frequencies.
+        codes (dict): The dictionary of our previously generated Huffman codes.
+    """
+    # Output the results table
     weighted_min_path_length = 0
     print("╒════════╤═══════════╤══════════╤════════╤════════════╕\n"
           "│ Letter │ Frequency │   Code   │ Length │ Freq X Len │\n"
           "├╶╶╶╶╶╶╶╶┼╶╶╶╶╶╶╶╶╶╶╶┼╶╶╶╶╶╶╶╶╶╶┼╶╶╶╶╶╶╶╶┼╶╶╶╶╶╶╶╶╶╶╶╶┤")
+
+    # Iterate over characters in alphabetical order
     for char in sorted(chars):
-        # match char to freq with index
+        # Match char to freq with index
         frequency = freq[chars.index(char)]
 
-        # unpack from dict
+        # Unpack code from dictionary
         code = codes[char]
 
-        # calculate length
+        # Calculate length
         length = len(code)
 
-        # calculate min path length
+        # Calculate min path length
         freq_x_len = frequency * length
         weighted_min_path_length += freq_x_len
 
@@ -100,8 +175,7 @@ def print_output(freq: list, chars: list, codes: dict):
 
 
 if __name__ == '__main__':
+    # Here we go!
     huffman_tree = create_huffman_tree(freq, chars)
     huffman_codes = create_huffman_codes(huffman_tree)
     print_output(freq, chars, huffman_codes)
-    if input("Print tree? y/n: ") in ['y', 'Y']:
-        print(huffman_tree)
