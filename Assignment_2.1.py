@@ -1,6 +1,6 @@
 # CS 3310 Assignment 3 by Christian Henning
-# This program implements the Huffman Codes algorithm, and displays
-# the resulting table with the resulting weighted minimum path length.
+# This program implements the Huffman Codes algorithm, and displays a table with
+# the resulting codes, associated information, and weighted minimum path length.
 
 import heapq
 
