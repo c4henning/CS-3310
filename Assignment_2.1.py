@@ -9,6 +9,10 @@ freq = [77, 17, 32, 42, 120, 24, 17, 50, 76, 4, 7, 42, 24, 67, 67, 20, 5, 59, 67
 chars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
          'W', 'X', 'Y', 'Z']
 
+if len(freq) != len(chars):
+    raise ValueError("Mismatched lengths: Frequency list has %d elements, while Characters list has %d elements."
+                     % (len(freq), len(chars)))
+
 
 class Node:
     """
@@ -147,9 +151,9 @@ def print_output(freq: list, chars: list, codes: dict):
     """
     # Output the results table
     weighted_min_path_length = 0
-    print("╒════════╤═══════════╤══════════╤════════╤════════════╕\n"
-          "│ Letter │ Frequency │   Code   │ Length │ Freq X Len │\n"
-          "├╶╶╶╶╶╶╶╶┼╶╶╶╶╶╶╶╶╶╶╶┼╶╶╶╶╶╶╶╶╶╶┼╶╶╶╶╶╶╶╶┼╶╶╶╶╶╶╶╶╶╶╶╶┤")
+    print("╒════════╤═══════════╤════════════╤════════╤════════════╕\n"
+          "│ Letter │ Frequency │    Code    │ Length │ Freq X Len │\n"
+          "├╶╶╶╶╶╶╶╶┼╶╶╶╶╶╶╶╶╶╶╶┼╶╶╶╶╶╶╶╶╶╶╶╶┼╶╶╶╶╶╶╶╶┼╶╶╶╶╶╶╶╶╶╶╶╶┤")
 
     # Iterate over characters in alphabetical order
     for char in sorted(chars):
@@ -166,12 +170,12 @@ def print_output(freq: list, chars: list, codes: dict):
         freq_x_len = frequency * length
         weighted_min_path_length += freq_x_len
 
-        print(f"│ {char:^6} │ {frequency:^9} │ {code:<8} │ {length:^6} │ {freq_x_len:^10} │")
+        print(f"│ {char:^6} │ {frequency:^9} │ {code:<10} │ {length:^6} │ {freq_x_len:^10} │")
 
     # Output the weighted minimum path length
-    print(f"╞════════╧═══════════╧══════════╧════════╧════════════╡\n"
-          f"│ The weighted minimum path length is: {weighted_min_path_length: >10}     │\n"
-          f"╰─────────────────────────────────────────────────────╯")
+    print(f"╞════════╧═══════════╧════════════╧════════╧════════════╡\n"
+          f"│ The weighted minimum path length is:   {weighted_min_path_length: >10}     │\n"
+          f"╰───────────────────────────────────────────────────────╯")
 
 
 if __name__ == '__main__':
