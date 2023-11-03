@@ -179,3 +179,20 @@ if __name__ == '__main__':
     huffman_tree = create_huffman_tree(freq, chars)
     huffman_codes = create_huffman_codes(huffman_tree)
     print_output(freq, chars, huffman_codes)
+
+    you_are_curious = False  # Change me for bonus content
+    if you_are_curious:
+        if input("Print huffman codes dict? y/n: ").lower().startswith('y'):
+            print(huffman_codes)
+        if input("Print tree? y/n: ").lower().startswith('y'):
+            print(huffman_tree)
+        while True:
+            if input("Encode a word? y/n: ").lower().startswith('y'):
+                word = input("\tinput a word: ")
+                print(f'\t\t{word}: ', end='')
+                for ch in word:
+                    print(huffman_codes[ch.upper()], end='')
+                print()
+            else:
+                print("Bye!")
+                break
