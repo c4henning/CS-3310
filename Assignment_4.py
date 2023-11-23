@@ -2,7 +2,6 @@
 # This program reads data from an input file, stores it in a LinkedList,
 # and performs a linear search and binary search.
 import csv
-verbose = False
 
 
 class Node(object):
@@ -45,8 +44,6 @@ class LinkedList(object):
         self.__header.next = self.__trailer
         self.__trailer.prev = self.__header
         self.size = 0
-        if verbose:
-            print("Initialized Linked List:", id(self))
 
     def add(self, index: int, new_data: any):
         """
@@ -73,11 +70,6 @@ class LinkedList(object):
             prev_node.next = new_node
 
             self.size += 1
-            if verbose:
-                print(f"Added Node: {id(new_node)}\n"
-                      f"\tto parent list: {id(self)}\n"
-                      f"\twith data: {new_data}\n"
-                      f"\ttype: {type(new_data)}")
 
     def remove(self, index) -> any:
         """
@@ -101,9 +93,6 @@ class LinkedList(object):
             next_node.prev = prev_node
             prev_node.next = next_node
 
-            if verbose:
-                print(f"Removed Node: {id(target_node)}\n"
-                      f"\tfrom parent list: {id(self)}")
             del target_node
             self.size -= 1
             return data
