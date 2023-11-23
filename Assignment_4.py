@@ -45,6 +45,31 @@ class LinkedList(object):
         self.__trailer.prev = self.__header
         self.size = 0
 
+    def __iter__(self):
+        self.i = self.__header.next
+        return self
+
+    def __next__(self):
+        n = self.i
+        self.i = self.i.next
+        if n == self.__trailer:
+            raise StopIteration
+        else:
+            return n
+
+    def __len__(self):
+        return self.size
+
+    def __contains__(self, item):
+        checked_node = self.__header.next
+        while True:
+            if checked_node == self.__trailer:
+                return False
+            elif checked_node.data == item:
+                return True
+            else:
+                checked_node = checked_node.next
+
     def add(self, index: int, new_data: any):
         """
         Adds a new Node with data `new_data` to the linked list at index `i`.
@@ -132,6 +157,9 @@ class Game:
     def __repr__(self):
         return f'{self.__game_id, self.__name, self.__average_user_rating, self.__user_rating_count, self.__developer, self.__size}'
 
+    def __eq__(self, other: 'Game'):
+        return self.__game_id == other.__game_id
+
     def get(self):
         all_data = [
             self.__game_id,
@@ -150,8 +178,8 @@ def read_data_to_ll(ll: LinkedList) -> None:
         games_file = csv.reader(file)
         for row in games_file:
             new_game = Game(*row)
-            # print(new_game)
-            ll.add(0, new_game)
+            if new_game not in ll:
+                ll.add(-1, new_game)
 
 
 gamesLinkedList = LinkedList()
