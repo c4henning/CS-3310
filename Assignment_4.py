@@ -3,6 +3,7 @@
 # and performs a linear search and binary search.
 import csv
 import time
+import random
 
 
 class Node(object):
@@ -270,3 +271,20 @@ def read_data_to_ll(ll: LinkedList) -> None:
 
 gamesLinkedList = LinkedList()
 read_data_to_ll(gamesLinkedList)
+games_to_search_for = []
+for _ in range(20):
+    n = random.randint(0, len(gamesLinkedList))
+    g = gamesLinkedList.get_node(n).data.get()[1]
+    games_to_search_for.append(g)
+
+recd_times = []
+for target in games_to_search_for:
+    start = time.time()
+    for game in gamesLinkedList:
+        if game.data.get()[1] == target:
+            break
+    end = time.time()
+    meas_time = (end - start) * 10 ** 9
+    recd_times.append(meas_time)
+
+print(sum(recd_times)/len(recd_times))
