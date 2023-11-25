@@ -2,6 +2,7 @@
 # This program reads data from an input file, stores it in a LinkedList,
 # and performs a linear search and binary search.
 import csv
+import time
 
 
 class Node(object):
@@ -231,6 +232,25 @@ class Game:
             self.__size
         ]
         return all_data
+
+
+def timing_function(func, *args, **kwargs):
+    """
+    Measures and prints the execution time of a function.
+
+    Args:
+        func (Callable): The function to be timed.
+        *args: Positional arguments to pass to the function.
+        **kwargs: Keyword arguments to pass to the function.
+
+    Returns:
+        The result of the function call.
+    """
+    start = time.time()
+    result = func(*args, **kwargs)
+    end = time.time()
+    print(f"Execution time of {func.__name__} is: {(end - start) * 10 ** 9:,.0f} ns")
+    return result
 
 
 def read_data_to_ll(ll: LinkedList) -> None:
