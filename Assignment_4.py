@@ -247,9 +247,9 @@ def timing_function(func, *args, **kwargs):
     Returns:
         The result of the function call.
     """
-    start = time.time()
+    start = time.perf_counter()
     result = func(*args, **kwargs)
-    end = time.time()
+    end = time.perf_counter()
     print(f"Execution time of {func.__name__} is: {(end - start) * 10 ** 9:,.0f} ns")
     return result
 
@@ -271,6 +271,7 @@ def read_data_to_ll(ll: LinkedList) -> None:
 
 gamesLinkedList = LinkedList()
 read_data_to_ll(gamesLinkedList)
+
 games_to_search_for = []
 for _ in range(20):
     n = random.randint(0, len(gamesLinkedList))
@@ -279,11 +280,11 @@ for _ in range(20):
 
 recd_times = []
 for target in games_to_search_for:
-    start = time.time()
+    start = time.perf_counter()
     for game in gamesLinkedList:
         if game.data.get()[1] == target:
             break
-    end = time.time()
+    end = time.perf_counter()
     meas_time = (end - start) * 10 ** 9
     recd_times.append(meas_time)
 
