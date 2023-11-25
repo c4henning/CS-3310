@@ -281,11 +281,17 @@ for _ in range(20):
 recd_times = []
 for target in games_to_search_for:
     start = time.perf_counter()
+
+    # The `__contains__` dunder was hand-coded for the LL class, and executes a linear search.
+    # Although the following loop appears to use a primitive list, it doesn't.
+    # This allows us to write more naturally using the for ... in syntax.
     for game in gamesLinkedList:
         if game.data.get()[1] == target:
             break
+
     end = time.perf_counter()
     meas_time = (end - start) * 10 ** 9
     recd_times.append(meas_time)
 
-print(sum(recd_times)/len(recd_times))
+print(f"Average linear search time of gamesLinkedList across {len(recd_times)} iterations is: "
+      f"{sum(recd_times)/len(recd_times):,.0f} ns")
