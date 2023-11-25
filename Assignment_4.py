@@ -46,10 +46,16 @@ class LinkedList(object):
         self.size = 0
 
     def __iter__(self):
+        """
+        Together with `__next__` makes the LinkedList class iterable
+        """
         self.i = self.__header.next
         return self
 
     def __next__(self):
+        """
+        Together with `__iter__` makes the LinkedList class iterable
+        """
         n = self.i
         self.i = self.i.next
         if n == self.__trailer:
@@ -58,9 +64,24 @@ class LinkedList(object):
             return n
 
     def __len__(self):
+        """
+        Allows for the use of the builtin `len()` function.
+
+        Returns:
+             int: The length of the LinkedList exclusive of header and trailer
+        """
         return self.size
 
     def __contains__(self, item):
+        """
+        Executes a linear search for an item in the LinkedList.
+        Allows for the use of the `in` operator to check for membership.
+
+        Args:
+            item: The item to search for.
+        Returns:
+            bool: True if item is found, otherwise False.
+        """
         checked_node = self.__header.next
         while True:
             if checked_node == self.__trailer:
