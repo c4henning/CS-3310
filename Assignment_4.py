@@ -91,6 +91,25 @@ class LinkedList(object):
             else:
                 checked_node = checked_node.next
 
+    def __getitem__(self, item):
+        """
+        Executes a linear search for an item in the LinkedList.
+        Allows for the use of the `[]` subscript operator to access elements of the LinkedList.
+
+        Args:
+            item: The item to search for.
+        Returns:
+            any: The `data` attribute of the found Node
+        """
+        checked_node = self.__header.next
+        while True:
+            if checked_node == self.__trailer:
+                return None
+            elif checked_node.data == item:
+                return checked_node.data
+            else:
+                checked_node = checked_node.next
+
     def add(self, index: int, new_data: any):
         """
         Adds a new Node with data `new_data` to the linked list at index `i`.
@@ -165,6 +184,27 @@ class LinkedList(object):
             current = current.next
         return current
 
+    def index(self, item) -> int:
+        """
+
+        Args:
+            item:
+        Returns:
+             int: The first index location of the specified item
+        Raises:
+            ValueError: If the item is not in the LinkedList
+        """
+        checked_node = self.__header.next
+        index = 0
+        while True:
+            if checked_node == self.__trailer:
+                raise ValueError(f"{item} is not in list")
+            elif checked_node.data == item:
+                return index
+            else:
+                checked_node = checked_node.next
+                index += 1
+
 
 class Game:
     def __init__(self, game_id, name, average_user_rating, user_rating_count, developer, size):
@@ -201,6 +241,11 @@ def read_data_to_ll(ll: LinkedList) -> None:
             new_game = Game(*row)
             if new_game not in ll:
                 ll.add(-1, new_game)
+            elif ll[new_game].get()[3] < new_game.get()[3]:
+                ll.remove(ll.index(new_game))
+                ll.add(-1, new_game)
+            else:
+                pass
 
 
 gamesLinkedList = LinkedList()
