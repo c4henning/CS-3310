@@ -269,9 +269,23 @@ def read_data_to_ll(ll: LinkedList) -> None:
                 pass
 
 
+# Task 1, 2
 gamesLinkedList = LinkedList()
 read_data_to_ll(gamesLinkedList)
 
+# Task 3
+rand_game = random.randint(0, len(gamesLinkedList))
+game_to_find = gamesLinkedList.get_node(rand_game).data.get()[1]
+start = time.perf_counter()
+for game in gamesLinkedList:
+    if game.data.get()[1] == game_to_find:
+        print(game.data)
+        break
+end = time.perf_counter()
+meas_time = (end - start) * 10 ** 9
+print(f"{game_to_find if len(game_to_find) < 10 else game_to_find[:10] + '...'} was found in {meas_time:,.0f} ns")
+
+# Task 4
 games_to_search_for = []
 for _ in range(20):
     n = random.randint(0, len(gamesLinkedList))
