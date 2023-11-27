@@ -164,6 +164,44 @@ class LinkedList(object):
             self.size -= 1
             return data
 
+    def swap(self, a: int, b: int):
+        if a == b:
+            return  # No swap needed if the indices are the same
+
+        if a > b:
+            a, b = b, a  # Ensure a is the smaller index
+
+        node_a = self.get_node(a)
+        node_b = self.get_node(b)
+
+        if b == a + 1:
+            # Swapping adjacent nodes
+            node_a_l = node_a.prev
+            node_b_r = node_b.next
+
+            node_a_l.next = node_b
+            node_b.prev = node_a_l
+
+            node_b.next = node_a
+            node_a.prev = node_b
+
+            node_a.next = node_b_r
+            node_b_r.prev = node_a
+
+        else:
+            # Swapping non-adjacent nodes
+            node_a_l = node_a.prev
+            node_a_r = node_a.next
+
+            node_b_l = node_b.prev
+            node_b_r = node_b.next
+
+            node_a_l.next, node_b_l.next = node_b, node_a
+            node_a_r.prev, node_b_r.prev = node_b, node_a
+
+            node_a.next, node_b.next = node_b_r, node_a_r
+            node_a.prev, node_b.prev = node_b_l, node_a_l
+
     def get_node(self, index) -> Node:
         """
         Finds and returns the Node at the specified index.
