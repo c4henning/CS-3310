@@ -307,6 +307,25 @@ def read_data_to_ll(ll: LinkedList) -> None:
                 pass
 
 
+def insertion_sort(ll):
+    count = 0
+    for i in range(1, len(ll)):
+        current = ll.get_node(i)
+        current_data = current.data
+        j = i - 1
+
+        # Find position where current node should be inserted
+        while j >= 0 and current_data.get()[1] < ll.get_node(j).data.get()[1]:
+            j -= 1
+
+        # Remove current node and insert it at the found position
+        if j != i - 1:
+            ll.remove(i)
+            ll.add(j + 1, current_data)
+
+        count += 1
+        print(count)
+
 # Task 1, 2
 gamesLinkedList = LinkedList()
 read_data_to_ll(gamesLinkedList)
@@ -347,3 +366,6 @@ for target in games_to_search_for:
 
 print(f"Average linear search time of gamesLinkedList across {len(recd_times)} iterations is: "
       f"{sum(recd_times)/len(recd_times):,.0f} ns")
+
+# Task 5
+insertion_sort(gamesLinkedList)
