@@ -1,6 +1,10 @@
-# CS 3310 Assignment 4 by Christian Henning
-# This program reads data from an input file, stores it in a LinkedList,
-# and performs a linear search and binary search.
+"""
+CS 3310 Assignment 4 by Christian Henning
+
+This program reads data from an input file, stores it in a LinkedList,
+and performs a linear search and binary search.
+"""
+
 import csv
 import time
 import random
@@ -307,15 +311,14 @@ def read_data_to_ll(ll: LinkedList) -> None:
                 pass
 
 
-def insertion_sort(ll):
-    count = 0
+def insertion_sort(ll: LinkedList, sort_by: int) -> None:
     for i in range(1, len(ll)):
         current = ll.get_node(i)
         current_data = current.data
         j = i - 1
 
         # Find position where current node should be inserted
-        while j >= 0 and current_data.get()[1] < ll.get_node(j).data.get()[1]:
+        while j >= 0 and current_data.get()[sort_by] < ll.get_node(j).data.get()[sort_by]:
             j -= 1
 
         # Remove current node and insert it at the found position
@@ -323,8 +326,7 @@ def insertion_sort(ll):
             ll.remove(i)
             ll.add(j + 1, current_data)
 
-        count += 1
-        print(count)
+
 
 # Task 1, 2
 gamesLinkedList = LinkedList()
@@ -345,7 +347,7 @@ print(f"{game_to_find if len(game_to_find) < 10 else game_to_find[:10] + '...'} 
 # Task 4
 games_to_search_for = []
 for _ in range(20):
-    n = random.randint(0, len(gamesLinkedList))
+    n = random.randint(0, len(gamesLinkedList) - 1)
     g = gamesLinkedList.get_node(n).data.get()[1]
     games_to_search_for.append(g)
 
@@ -355,7 +357,7 @@ for target in games_to_search_for:
 
     # The `__contains__` dunder was hand-coded for the LL class, and executes a linear search.
     # Although the following loop appears to use a primitive list, it doesn't.
-    # This allows us to write more naturally using the for ... in syntax.
+    # This allows us to write more naturally using the `for x in y` syntax.
     for game in gamesLinkedList:
         if game.data.get()[1] == target:
             break
@@ -368,4 +370,4 @@ print(f"Average linear search time of gamesLinkedList across {len(recd_times)} i
       f"{sum(recd_times)/len(recd_times):,.0f} ns")
 
 # Task 5
-insertion_sort(gamesLinkedList)
+timing_function(insertion_sort, gamesLinkedList, 2)
