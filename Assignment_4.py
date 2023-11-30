@@ -297,21 +297,38 @@ def timing_function(func, *args, **kwargs):
 
 
 def read_data_to_ll(ll: LinkedList) -> None:
+    """
+    Reads data from a CSV file and populates a LinkedList with Game objects.
+
+    Args:
+        ll (LinkedList): The LinkedList to be populated with Game objects.
+    """
     with open("Assignments/games.csv") as file:
-        file.readline()     # waste header
+        file.readline()  # Skip the header
         games_file = csv.reader(file)
         for row in games_file:
             new_game = Game(*row)
+
+            # If the new_game is not already in the LinkedList, add it to the end
             if new_game not in ll:
                 ll.add(-1, new_game)
+            # If the new_game is a duplicate with a higher score than an existing game, replace it
             elif ll[new_game].get()[3] < new_game.get()[3]:
                 ll.remove(ll.index(new_game))
                 ll.add(-1, new_game)
+            # Otherwise, do nothing (new_game is a duplicate with a lower score)
             else:
                 pass
 
 
 def insertion_sort(ll: LinkedList, sort_by: int) -> None:
+    """
+    Sorts the LinkedList using the insertion sort algorithm.
+
+    Args:
+        ll (LinkedList): The LinkedList to be sorted.
+        sort_by (int): The column in the `Game` data to sort the list by.
+    """
     for i in range(1, len(ll)):
         current = ll.get_node(i)
         current_data = current.data
