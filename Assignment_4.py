@@ -327,6 +327,69 @@ def insertion_sort(ll: LinkedList, sort_by: int) -> None:
             ll.add(j + 1, current_data)
 
 
+def partition(ll: LinkedList, sort_by: int, low_index: int, high_index: int) -> int:
+    """
+    Partitions the LinkedList in the specified range using the best-of-three pivot selection method.
+
+    Args:
+        ll (LinkedList): The LinkedList to be partitioned.
+        sort_by (int): The column in the `Game` data to sort the list by.
+        low_index (int): The starting index of the partition.
+        high_index (int): The ending index of the partition.
+
+    Returns:
+        int: The index of the pivot element after partitioning.
+    """
+    # Best of three partitioning
+    mid_index = (high_index + low_index) // 2
+    candidate_a = ll.get_node(high_index).data.get()[sort_by]
+    candidate_b = ll.get_node(mid_index).data.get()[sort_by]
+    candidate_c = ll.get_node(low_index).data.get()[sort_by]
+
+    if (candidate_a > candidate_b) != (candidate_a > candidate_c):
+        pivot_value = candidate_a
+    elif (candidate_b < candidate_a) != (candidate_b < candidate_c):
+        pivot_value = candidate_b
+    else:
+        pivot_value = candidate_c
+
+    # Find index of pivot_value
+    if pivot_value == candidate_a:
+        pivot_index = high_index
+    elif pivot_value == candidate_b:
+        pivot_index = mid_index
+    else:
+        pivot_index = low_index
+
+    # Move the pivot element to the end
+    ll.swap(pivot_index, high_index)
+
+    i = low_index - 1
+    for j in range(low_index, high_index):
+        if ll.get_node(j).data.get()[sort_by] <= pivot_value:
+            i += 1
+            ll.swap(i, j)
+
+    ll.swap(i + 1, high_index)
+
+    return i + 1
+
+
+def quick_sort(ll: LinkedList, sort_by, low_index, high_index) -> None:
+    """
+    Sorts the LinkedList in the specified range recursively using the QuickSort algorithm.
+
+    Args:
+        ll (LinkedList): The LinkedList to be sorted.
+        sort_by (int): The column in the 'Game' data to sort the list by.
+        low_index (int): The starting index of the range to be sorted.
+        high_index (int): The ending index of the range to be sorted.
+    """
+    if low_index < high_index:
+        pivot_index = partition(ll, sort_by, low_index, high_index)
+        quick_sort(ll, sort_by, low_index, pivot_index - 1)  # Sort the left sublist
+        quick_sort(ll, sort_by, pivot_index + 1, high_index)  # Sort the right sublist
+
 
 # Task 1, 2
 gamesLinkedList = LinkedList()
@@ -370,4 +433,5 @@ print(f"Average linear search time of gamesLinkedList across {len(recd_times)} i
       f"{sum(recd_times)/len(recd_times):,.0f} ns")
 
 # Task 5
-timing_function(insertion_sort, gamesLinkedList, 2)
+timing_function(insertion_sort, gamesLinkedList, 1)
+timing_function(quick_sort, gamesLinkedList, 1, 0, len(gamesLinkedList) - 1)
