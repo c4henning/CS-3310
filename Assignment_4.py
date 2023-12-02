@@ -250,8 +250,19 @@ class LinkedList(object):
                 index += 1
 
 
-class Game:
+class Game(object):
     def __init__(self, game_id, name, average_user_rating, user_rating_count, developer, size):
+        """
+        Initializes a Game object with the provided attributes.
+
+        Args:
+            game_id (int): The unique identifier for the game.
+            name (str): The name of the game.
+            average_user_rating (float): The average user rating for the game.
+            user_rating_count (int): The count of user ratings for the game.
+            developer (str): The developer of the game.
+            size (int): The size of the game in bytes.
+        """
         self.__game_id = int(game_id)
         self.__name = name
         self.__average_user_rating = float(average_user_rating)
@@ -260,12 +271,28 @@ class Game:
         self.__size = int(size)
 
     def __repr__(self):
+        """
+        Returns a string representation of the Game object.
+        """
         return f'{self.__game_id, self.__name, self.__average_user_rating, self.__user_rating_count, self.__developer, self.__size}'
 
     def __eq__(self, other: 'Game'):
+        """
+        Checks if two Game objects are equal based on their game_id.
+
+        Args:
+            other (Game): The other Game object to compare to.
+
+        Returns:
+            bool: True if the game_id of both objects is equal, False otherwise.
+        """
         return self.__game_id == other.__game_id
 
     def get(self):
+        """
+        Returns:
+            list: A list containing all the attributes of the Game object.
+        """
         all_data = [
             self.__game_id,
             self.__name,
