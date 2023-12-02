@@ -319,7 +319,7 @@ def timing_function(func, *args, **kwargs):
     start = time.perf_counter()
     result = func(*args, **kwargs)
     end = time.perf_counter()
-    print(f"Execution time of {func.__name__} is: {(end - start) * 10 ** 9:,.0f} ns")
+    print(f"Time for {func.__name__}: {(end - start) * 10 ** 9:,.0f} ns")
     return result
 
 
@@ -438,33 +438,51 @@ def quick_sort(ll: LinkedList, sort_by, low_index, high_index) -> None:
 # Task 1, 2
 gamesLinkedList = LinkedList()
 read_data_to_ll(gamesLinkedList)
+print("Number of elements in LinkedList: ", len(gamesLinkedList))
 
 # Task 3
-rand_game = random.randint(0, len(gamesLinkedList))
-game_to_find = gamesLinkedList.get_node(rand_game).data.get()[1]
+print("\n*** Linear Search Test ***\n")
+
+print("Before sorting:\n"
+      "First 5 elements from linked list:")
+for i in range(5):
+    game = gamesLinkedList.get_node(i)
+    data = game.data
+    print(data)
+
+print("\nSingle search:")
+game_to_find = random.choice(list(gamesLinkedList)).data.get()[1]
+print(f"Searching for {game_to_find}...")
+
 start = time.perf_counter()
 for game in gamesLinkedList:
+    # The `__contains__` dunder was hand-coded for the LL class, and executes a linear search.
+    # Although the following loop appears to use a primitive list, it doesn't.
+    # This allows us to write more naturally using the `for x in y` syntax.
     if game.data.get()[1] == game_to_find:
         print(game.data)
         break
 end = time.perf_counter()
 meas_time = (end - start) * 10 ** 9
-print(f"{game_to_find if len(game_to_find) < 10 else game_to_find[:10] + '...'} was found in {meas_time:,.0f} ns")
+
+print(f"{game_to_find if len(game_to_find) < 20 else game_to_find[:20].rstrip(' ') + '...'}"
+      f" was found in {meas_time:,.0f} ns")
+
 
 # Task 4
+print("\nMultiple search:")
 games_to_search_for = []
-for _ in range(20):
-    n = random.randint(0, len(gamesLinkedList) - 1)
-    g = gamesLinkedList.get_node(n).data.get()[1]
-    games_to_search_for.append(g)
+print("Searching for:")
+for _ in range(10):
+    game_to_find = random.choice(list(gamesLinkedList))
+    game_name = game_to_find.data.get()[1]
+    print("\t", game_name)
+    games_to_search_for.append(game_name)
 
 recd_times = []
 for target in games_to_search_for:
     start = time.perf_counter()
 
-    # The `__contains__` dunder was hand-coded for the LL class, and executes a linear search.
-    # Although the following loop appears to use a primitive list, it doesn't.
-    # This allows us to write more naturally using the `for x in y` syntax.
     for game in gamesLinkedList:
         if game.data.get()[1] == target:
             break
@@ -473,9 +491,23 @@ for target in games_to_search_for:
     meas_time = (end - start) * 10 ** 9
     recd_times.append(meas_time)
 
-print(f"Average linear search time of gamesLinkedList across {len(recd_times)} iterations is: "
-      f"{sum(recd_times)/len(recd_times):,.0f} ns")
+print(f"\nAverage linear search time of gamesLinkedList across {len(recd_times)} iterations is:\n"
+      f"\t {sum(recd_times)/len(recd_times):,.0f} ns")
+
 
 # Task 5
-timing_function(insertion_sort, gamesLinkedList, 1)
-timing_function(quick_sort, gamesLinkedList, 1, 0, len(gamesLinkedList) - 1)
+print()
+timing_function(quick_sort, gamesLinkedList, 1, 0, len(gamesLinkedList) - 1)    # quick_sort by Name
+timing_function(insertion_sort, gamesLinkedList, 1)     # insertion_sort by Name
+# sorting by the same col isn't very representative as an already sorted list is an edge case
+# I ran quick_sort first for its better average case time complexity
+# then insertion_sort due to its best case time complexity
+
+print("\nAfter sorting:\n"
+      "First 5 elements from linked list:")
+for i in range(5):
+    game = gamesLinkedList.get_node(i)
+    data = game.data
+    print(data)
+
+print()
