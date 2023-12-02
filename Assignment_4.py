@@ -270,11 +270,11 @@ class Game(object):
         self.__developer = developer
         self.__size = int(size)
 
-    def __repr__(self):
+    def __str__(self):
         """
         Returns a string representation of the Game object.
         """
-        return f'{self.__game_id, self.__name, self.__average_user_rating, self.__user_rating_count, self.__developer, self.__size}'
+        return ", ".join(str(value) for value in vars(self).values())
 
     def __eq__(self, other: 'Game'):
         """
