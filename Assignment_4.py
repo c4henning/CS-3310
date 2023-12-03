@@ -419,30 +419,30 @@ def quick_sort(ll: LinkedList, sort_by, low_index, high_index) -> None:
         quick_sort(ll, sort_by, pivot_index + 1, high_index)  # Sort the right sublist
 
 
-def ll_binary_search(l, h, a, t):
-    if l <= h:
-        s = (l + h) // 2
-        if a.get_node(s).data.get()[1] == t:
+def ll_binary_search(low_index, high_index, ll, item_to_find):
+    if low_index <= high_index:
+        s = (low_index + high_index) // 2
+        if ll.get_node(s).data.get()[1] == item_to_find:
             return s
-        if a.get_node(s).data.get()[1] < t:
-            return ll_binary_search(s + 1, h, a, t)
-        if a.get_node(s).data.get()[1] > t:
-            return ll_binary_search(l, s - 1, a, t)
-        return a.index(s)
+        if ll.get_node(s).data.get()[1] < item_to_find:
+            return ll_binary_search(s + 1, high_index, ll, item_to_find)
+        if ll.get_node(s).data.get()[1] > item_to_find:
+            return ll_binary_search(low_index, s - 1, ll, item_to_find)
+        return ll.index(s)
     else:
         return None
 
 
-def list_binary_search(l, h, a, t):
-    if l <= h:
-        s = (l + h) // 2
-        if a[s].data.get()[1] == t:
+def list_binary_search(low_index, high_index, ll, item_to_find):
+    if low_index <= high_index:
+        s = (low_index + high_index) // 2
+        if ll[s].data.get()[1] == item_to_find:
             return s
-        if a[s].data.get()[1] < t:
-            return list_binary_search(s + 1, h, a, t)
-        if a[s].data.get()[1] > t:
-            return list_binary_search(l, s - 1, a, t)
-        return a.index(s)
+        if ll[s].data.get()[1] < item_to_find:
+            return list_binary_search(s + 1, high_index, ll, item_to_find)
+        if ll[s].data.get()[1] > item_to_find:
+            return list_binary_search(low_index, s - 1, ll, item_to_find)
+        return ll.index(s)
     else:
         return None
 
@@ -459,12 +459,12 @@ print("Before sorting:\n"
       "First 5 elements from linked list:")
 for i in range(5):
     game = gamesLinkedList.get_node(i)
-    data = game.data
-    print(data)
+    game_data = game.data
+    print(game_data)
 
 print("\nSingle search:")
-a = random.choice(list(gamesLinkedList)).data.get()[1]
-game_to_find = a
+game_to_find = random.choice(list(gamesLinkedList)).data.get()[1]
+
 print(f"Searching for {game_to_find}...")
 
 start = time.perf_counter()
@@ -509,18 +509,16 @@ print(f"\nAverage linear search time of gamesLinkedList across {len(recd_times)}
 
 
 # Task 5
-timing_function(quick_sort, gamesLinkedList, 1, 0, len(gamesLinkedList) - 1)    # quick_sort by Name
 timing_function(insertion_sort, gamesLinkedList, 1)     # insertion_sort by Name
+timing_function(quick_sort, gamesLinkedList, 1, 0, len(gamesLinkedList) - 1)    # quick_sort by Name
 # sorting by the same col isn't very representative as an already sorted list is an edge case
-# I ran quick_sort first for its better average case time complexity
-# then insertion_sort due to its best case time complexity
 
 print("\nAfter sorting:\n"
       "First 5 elements from linked list:")
 for i in range(5):
     game = gamesLinkedList.get_node(i)
-    data = game.data
-    print(data)
+    game_data = game.data
+    print(game_data)
 
 bs_recd_times = []
 for target in games_to_search_for:
