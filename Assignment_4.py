@@ -40,7 +40,7 @@ class LinkedList(object):
         __maxSize (int): An arbitrary maximum size to limit the project's scope.
         __header (Node): The header node of the linked list.
         __trailer (Node): The trailer node of the linked list.
-        size (int): The current size of the linked list.
+        __size (int): The current size of the linked list.
     """
     __maxSize = 9_999_999
 
@@ -49,7 +49,7 @@ class LinkedList(object):
         self.__trailer = Node()
         self.__header.next = self.__trailer
         self.__trailer.prev = self.__header
-        self.size = 0
+        self.__size = 0
 
     def __iter__(self):
         """
@@ -76,7 +76,7 @@ class LinkedList(object):
         Returns:
              int: The length of the LinkedList exclusive of header and trailer
         """
-        return self.size
+        return self.__size
 
     def __contains__(self, item):
         """
@@ -126,21 +126,25 @@ class LinkedList(object):
         Raises:
             IndexError: If the linked list is full (__maxSize is reached).
         """
-        if self.size == self.__maxSize:
+        if self.__size == self.__maxSize:
             raise IndexError("An attempt to insert was made while Linked List is full")
+
+        new_node = Node(new_data)
+        if self.__size == 0:
+            next_node = self.__trailer
+            prev_node = self.__header
         else:
-            new_node = Node(new_data)
             next_node = self.get_node(index)
             prev_node = next_node.prev
 
-            new_node.next = next_node
-            new_node.prev = prev_node
+        new_node.next = next_node
+        new_node.prev = prev_node
 
-            next_node.prev = new_node
+        next_node.prev = new_node
 
-            prev_node.next = new_node
+        prev_node.next = new_node
 
-            self.size += 1
+        self.__size += 1
 
     def remove(self, index) -> any:
         """
@@ -153,7 +157,7 @@ class LinkedList(object):
         Raises:
             IndexError: If the linked list is empty.
         """
-        if self.size == 0:
+        if self.__size == 0:
             raise IndexError("An attempt to delete was made while Linked List is empty")
         else:
             target_node = self.get_node(index)
@@ -165,46 +169,17 @@ class LinkedList(object):
             prev_node.next = next_node
 
             del target_node
-            self.size -= 1
+            self.__size -= 1
             return data
 
     def swap(self, a: int, b: int):
         if a == b:
             return  # No swap needed if the indices are the same
 
-        if a > b:
-            a, b = b, a  # Ensure a is the smaller index
-
         node_a = self.get_node(a)
         node_b = self.get_node(b)
 
-        if b == a + 1:
-            # Swapping adjacent nodes
-            node_a_l = node_a.prev
-            node_b_r = node_b.next
-
-            node_a_l.next = node_b
-            node_b.prev = node_a_l
-
-            node_b.next = node_a
-            node_a.prev = node_b
-
-            node_a.next = node_b_r
-            node_b_r.prev = node_a
-
-        else:
-            # Swapping non-adjacent nodes
-            node_a_l = node_a.prev
-            node_a_r = node_a.next
-
-            node_b_l = node_b.prev
-            node_b_r = node_b.next
-
-            node_a_l.next, node_b_l.next = node_b, node_a
-            node_a_r.prev, node_b_r.prev = node_b, node_a
-
-            node_a.next, node_b.next = node_b_r, node_a_r
-            node_a.prev, node_b.prev = node_b_l, node_a_l
+        node_a.data, node_b.data = node_b.data, node_a.data
 
     def get_node(self, index) -> Node:
         """
@@ -219,14 +194,23 @@ class LinkedList(object):
         """
         # support for negative indexing
         if index < 0:
-            index += self.size + 1
-        if index < 0 or index > self.size:
+            index += self.__size + 1
+        if index < 0 or index > self.__size:
             raise IndexError("Index out of range")
-        current = self.__header.next
         # tabs through list until specified index is reached
-        for _ in range(index):
-            current = current.next
-        return current
+        # from start if index < len / 2
+        if index < self.__size / 2:
+            current = self.__header.next
+            for _ in range(index):
+                current = current.next
+            return current
+        # from end if index > len / 2
+        else:
+            current = self.__trailer.prev
+            steps_to_move = self.__size - index - 1
+            for _ in range(steps_to_move):
+                current = current.prev
+            return current
 
     def index(self, item) -> int:
         """
