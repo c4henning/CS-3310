@@ -435,6 +435,34 @@ def quick_sort(ll: LinkedList, sort_by, low_index, high_index) -> None:
         quick_sort(ll, sort_by, pivot_index + 1, high_index)  # Sort the right sublist
 
 
+def ll_binary_search(l, h, a, t):
+    if l <= h:
+        s = (l + h) // 2
+        if a.get_node(s).data.get()[1] == t:
+            return s
+        if a.get_node(s).data.get()[1] < t:
+            return ll_binary_search(s + 1, h, a, t)
+        if a.get_node(s).data.get()[1] > t:
+            return ll_binary_search(l, s - 1, a, t)
+        return a.index(s)
+    else:
+        return None
+
+
+def list_binary_search(l, h, a, t):
+    if l <= h:
+        s = (l + h) // 2
+        if a[s].data.get()[1] == t:
+            return s
+        if a[s].data.get()[1] < t:
+            return list_binary_search(s + 1, h, a, t)
+        if a[s].data.get()[1] > t:
+            return list_binary_search(l, s - 1, a, t)
+        return a.index(s)
+    else:
+        return None
+
+
 # Task 1, 2
 gamesLinkedList = LinkedList()
 read_data_to_ll(gamesLinkedList)
@@ -451,7 +479,8 @@ for i in range(5):
     print(data)
 
 print("\nSingle search:")
-game_to_find = random.choice(list(gamesLinkedList)).data.get()[1]
+a = random.choice(list(gamesLinkedList)).data.get()[1]
+game_to_find = a
 print(f"Searching for {game_to_find}...")
 
 start = time.perf_counter()
@@ -466,11 +495,11 @@ end = time.perf_counter()
 meas_time = (end - start) * 10 ** 9
 
 print(f"{game_to_find if len(game_to_find) < 20 else game_to_find[:20].rstrip(' ') + '...'}"
-      f" was found in {meas_time:,.0f} ns")
+      f" was found in {meas_time:,.0f} ns\n")
 
 
 # Task 4
-print("\nMultiple search:")
+print("Multiple search:")
 games_to_search_for = []
 print("Searching for:")
 for _ in range(10):
@@ -492,11 +521,10 @@ for target in games_to_search_for:
     recd_times.append(meas_time)
 
 print(f"\nAverage linear search time of gamesLinkedList across {len(recd_times)} iterations is:\n"
-      f"\t {sum(recd_times)/len(recd_times):,.0f} ns")
+      f"\t {sum(recd_times)/len(recd_times):,.0f} ns\n")
 
 
 # Task 5
-print()
 timing_function(quick_sort, gamesLinkedList, 1, 0, len(gamesLinkedList) - 1)    # quick_sort by Name
 timing_function(insertion_sort, gamesLinkedList, 1)     # insertion_sort by Name
 # sorting by the same col isn't very representative as an already sorted list is an edge case
@@ -510,4 +538,30 @@ for i in range(5):
     data = game.data
     print(data)
 
-print()
+bs_recd_times = []
+for target in games_to_search_for:
+    start = time.perf_counter()
+
+    ll_binary_search(0, len(gamesLinkedList) - 1, gamesLinkedList, target)
+
+    end = time.perf_counter()
+    meas_time = (end - start) * 10 ** 9
+    bs_recd_times.append(meas_time)
+
+print(f"\nAverage binary search time of gamesLinkedList across {len(bs_recd_times)} iterations is:\n"
+      f"\t {sum(bs_recd_times)/len(bs_recd_times):,.0f} ns\n")
+
+gamesPrimitiveList = timing_function(list, gamesLinkedList)
+
+lst_bs_recd_times = []
+for target in games_to_search_for:
+    start = time.perf_counter()
+
+    list_binary_search(0, len(gamesPrimitiveList) - 1, gamesPrimitiveList, target)
+
+    end = time.perf_counter()
+    meas_time = (end - start) * 10 ** 9
+    lst_bs_recd_times.append(meas_time)
+
+print(f"\nAverage binary search time of gamesPrimitiveList across {len(lst_bs_recd_times)} iterations is:\n"
+      f"\t {sum(lst_bs_recd_times) / len(lst_bs_recd_times):,.0f} ns\n")
