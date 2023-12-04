@@ -338,7 +338,7 @@ def read_data_to_ll(ll: LinkedList) -> None:
     Args:
         ll (LinkedList): The LinkedList to be populated with Game objects.
     """
-    with open("Assignments/games.csv") as file:
+    with open("games.csv") as file:
         file.readline()  # Skip the header
         games_file = csv.reader(file)
         for row in games_file:
