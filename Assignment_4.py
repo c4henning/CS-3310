@@ -58,7 +58,7 @@ class LinkedList(object):
         self.i = self.__header.next
         return self
 
-    def __next__(self):
+    def __next__(self) -> Node:
         """
         Together with `__iter__` makes the LinkedList class iterable
         """
@@ -69,7 +69,7 @@ class LinkedList(object):
         else:
             return n
 
-    def __len__(self):
+    def __len__(self) -> int:
         """
         Allows for the use of the builtin `len()` function.
 
@@ -78,7 +78,7 @@ class LinkedList(object):
         """
         return self.__size
 
-    def __contains__(self, item):
+    def __contains__(self, item) -> bool:
         """
         Executes a linear search for an item in the LinkedList.
         Allows for the use of the `in` operator to check for membership.
@@ -97,7 +97,7 @@ class LinkedList(object):
             else:
                 checked_node = checked_node.next
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: any) -> any:
         """
         Executes a linear search for an item in the LinkedList.
         Allows for the use of the `[]` subscript operator to access elements of the LinkedList.
@@ -116,7 +116,7 @@ class LinkedList(object):
             else:
                 checked_node = checked_node.next
 
-    def add(self, index: int, new_data: any):
+    def add(self, index: int, new_data: any) -> None:
         """
         Adds a new Node with data `new_data` to the linked list at index `i`.
 
@@ -146,7 +146,7 @@ class LinkedList(object):
 
         self.__size += 1
 
-    def remove(self, index) -> any:
+    def remove(self, index: int) -> any:
         """
         Removes the Node at the specified index in the linked list.
 
@@ -172,16 +172,32 @@ class LinkedList(object):
             self.__size -= 1
             return data
 
-    def swap(self, a: int, b: int):
+    def swap(self, a: int, b: int) -> None:
+        """
+        Swaps the Node data at the specified indexes in the linked list.
+
+        Args:
+            a (int): The index of the first item.
+            b (int): The index of the second item.
+        Raises:
+            IndexError: If an index is out of range.
+        """
         if a == b:
             return  # No swap needed if the indices are the same
+
+        if a < 0 or a > self.__size:
+            raise IndexError("Index `a` out of range")
+        if b < 0 or b > self.__size:
+            raise IndexError("Index `b` out of range")
 
         node_a = self.get_node(a)
         node_b = self.get_node(b)
 
+        # the Nodes themselves do not move, only their data attributes are swapped
+        # this eliminates the complexity arising from adjusting the adjacent Nodes
         node_a.data, node_b.data = node_b.data, node_a.data
 
-    def get_node(self, index) -> Node:
+    def get_node(self, index: int) -> Node:
         """
         Finds and returns the Node at the specified index.
 
@@ -214,9 +230,10 @@ class LinkedList(object):
 
     def index(self, item) -> int:
         """
+        Finds and returns the index of the specified item.
 
         Args:
-            item:
+            item (any): The item to search for
         Returns:
              int: The first index location of the specified item
         Raises:
@@ -254,13 +271,13 @@ class Game(object):
         self.__developer = developer
         self.__size = int(size)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns a string representation of the Game object.
         """
         return ", ".join(str(value) for value in vars(self).values())
 
-    def __eq__(self, other: 'Game'):
+    def __eq__(self, other: 'Game') -> bool:
         """
         Checks if two Game objects are equal based on their game_id.
 
@@ -272,7 +289,7 @@ class Game(object):
         """
         return self.__game_id == other.__game_id
 
-    def get(self):
+    def get(self) -> list:
         """
         Returns:
             list: A list containing all the attributes of the Game object.
@@ -288,7 +305,7 @@ class Game(object):
         return all_data
 
 
-def timing_function(func, *args, **kwargs):
+def timing_function(func, *args, **kwargs) -> tuple[any, float]:
     """
     Measures and prints the execution time of a function.
 
@@ -298,19 +315,25 @@ def timing_function(func, *args, **kwargs):
         **kwargs: Keyword arguments to pass to the function.
 
     Returns:
-        The result of the function call.
+        tuple:
+            any: The result of the function call.
+            float: The time elapsed during the function call.
     """
     start_timer = time.perf_counter()
     result = func(*args, **kwargs)
     end_timer = time.perf_counter()
+
     elapsed_time = (end_timer - start_timer) * 10 ** 9
     print(f"Time for {func.__name__}: {elapsed_time:,.0f} ns")
+
     return result, elapsed_time
 
 
 def read_data_to_ll(ll: LinkedList) -> None:
     """
     Reads data from a CSV file and populates a LinkedList with Game objects.
+
+    Any instances of duplicate games will discard the lower of the two user rating counts.
 
     Args:
         ll (LinkedList): The LinkedList to be populated with Game objects.
@@ -421,31 +444,63 @@ def quick_sort(ll: LinkedList, sort_by, low_index, high_index) -> None:
 
 
 def ll_binary_search(low_index, high_index, ll, item_to_find):
+    """
+    Performs a binary search on a LinkedList.
+
+    Args:
+        low_index (int): The lower index of the range to search within.
+        high_index (int): The higher index of the range to search within.
+        ll (LinkedList): The LinkedList object in which to search.
+        item_to_find (any): The item to search for in the LinkedList.
+
+    Returns:
+        int: The index of the found item in the LinkedList. Returns None if not found.
+    """
     if low_index <= high_index:
-        s = (low_index + high_index) // 2
+        s = (low_index + high_index) // 2  # Calculate the middle index
+
+        # Compare the item to find with the middle element
         if ll.get_node(s).data.get()[1] == item_to_find:
-            return s
+            return s  # Item found
         if ll.get_node(s).data.get()[1] < item_to_find:
+            # If the item is greater, ignore the left half
             return ll_binary_search(s + 1, high_index, ll, item_to_find)
         if ll.get_node(s).data.get()[1] > item_to_find:
+            # If the item is smaller, ignore the right half
             return ll_binary_search(low_index, s - 1, ll, item_to_find)
-        return ll.index(s)
+
     else:
-        return None
+        return None  # Item not found
 
 
-def list_binary_search(low_index, high_index, ll, item_to_find):
+def list_binary_search(low_index, high_index, lst, item_to_find):
+    """
+    Performs a binary search on a list.
+
+    Args:
+        low_index (int): The lower index of the range to search within.
+        high_index (int): The higher index of the range to search within.
+        lst (list): The list object in which to search.
+        item_to_find (any): The item to search for in the list.
+
+    Returns:
+        int: The index of the found item in the list. Returns None if not found.
+    """
     if low_index <= high_index:
-        s = (low_index + high_index) // 2
-        if ll[s].data.get()[1] == item_to_find:
-            return s
-        if ll[s].data.get()[1] < item_to_find:
-            return list_binary_search(s + 1, high_index, ll, item_to_find)
-        if ll[s].data.get()[1] > item_to_find:
-            return list_binary_search(low_index, s - 1, ll, item_to_find)
-        return ll.index(s)
+        s = (low_index + high_index) // 2  # Calculate the middle index
+
+        # Compare the item to find with the middle element
+        if lst[s].data.get()[1] == item_to_find:
+            return s  # Item found
+        if lst[s].data.get()[1] < item_to_find:
+            # If the item is greater, ignore the left half
+            return list_binary_search(s + 1, high_index, lst, item_to_find)
+        if lst[s].data.get()[1] > item_to_find:
+            # If the item is smaller, ignore the right half
+            return list_binary_search(low_index, s - 1, lst, item_to_find)
+
     else:
-        return None
+        return None  # Item not found
 
 
 # Task 1, 2
