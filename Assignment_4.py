@@ -511,13 +511,15 @@ print("Number of elements in LinkedList: ", len(gamesLinkedList))
 # Task 3
 print("\n*** Linear Search Test ***\n")
 
+# Print the first five elements from the linked list before sorting
 print("Before sorting:\n"
       "First 5 elements from linked list:")
 for i in range(5):
-    game = gamesLinkedList.get_node(i)
-    game_data = game.data
+    game = gamesLinkedList.get_node(i)  # Retrieve the game at the current index
+    game_data = game.data  # Access the data of the retrieved game node
     print(game_data)
 
+# Perform a single linear search
 print("\nSingle search:")
 game_to_find = random.choice(list(gamesLinkedList)).data.get()[1]
 
@@ -529,10 +531,10 @@ for game in gamesLinkedList:
     # Although the following loop appears to use a primitive list, it doesn't.
     # This allows us to write more naturally using the `for x in y` syntax.
     if game.data.get()[1] == game_to_find:
-        print(game.data)
-        break
+        print(game.data)  # Print the game data if found
+        break  # Break the loop once the game is found
 end = time.perf_counter()
-meas_time = (end - start) * 10 ** 9
+meas_time = (end - start) * 10 ** 9  # Calculate the elapsed time in nanoseconds
 
 print(f"{game_to_find if len(game_to_find) < 20 else game_to_find[:20].rstrip(' ') + '...'}"
       f" was found in {meas_time:,.0f} ns\n")
@@ -543,18 +545,19 @@ print("Multiple linear search:")
 games_to_search_for = []
 print("Searching for:")
 for _ in range(10):
-    game_to_find = random.choice(list(gamesLinkedList))
-    game_name = game_to_find.data.get()[1]
-    games_to_search_for.append(game_name)
+    game_to_find = random.choice(list(gamesLinkedList))  # Randomly choose a game
+    game_name = game_to_find.data.get()[1]  # Extract the name of the chosen game
+    games_to_search_for.append(game_name)  # Append the game name to the search list
 
 ls_recd_times = []
 for target in games_to_search_for:
     print("\t", target)
     start = time.perf_counter()
 
+    # Perform linear search for the target game
     for game in gamesLinkedList:
         if game.data.get()[1] == target:
-            break
+            break  # Break the loop once the game is found
 
     end = time.perf_counter()
     meas_time = (end - start) * 10 ** 9
@@ -609,6 +612,7 @@ lst_bs_recd_times = []
 for target in games_to_search_for:
     start = time.perf_counter()
 
+    # Perform binary search for the target game in the Python list
     list_binary_search(0, len(gamesPrimitiveList) - 1, gamesPrimitiveList, target)
 
     end = time.perf_counter()
@@ -619,6 +623,8 @@ bs_lst_avg_time = sum(lst_bs_recd_times) / len(lst_bs_recd_times)
 print(f"\nAverage binary search time of gamesPrimitiveList across {len(lst_bs_recd_times)} iterations is:\n"
       f"\t {bs_lst_avg_time:,.0f} ns\n")
 
+# Calculate the breakpoint 'm' where sorting once and performing multiple binary searches
+# becomes more efficient than performing multiple linear searches
 m = 1
 while (qs_time + (bs_lst_avg_time * m)) > (ls_avg_time * m):
     m += 1
