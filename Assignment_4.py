@@ -300,11 +300,12 @@ def timing_function(func, *args, **kwargs):
     Returns:
         The result of the function call.
     """
-    start = time.perf_counter()
+    start_timer = time.perf_counter()
     result = func(*args, **kwargs)
-    end = time.perf_counter()
-    print(f"Time for {func.__name__}: {(end - start) * 10 ** 9:,.0f} ns")
-    return result
+    end_timer = time.perf_counter()
+    elapsed_time = (end_timer - start_timer) * 10 ** 9
+    print(f"Time for {func.__name__}: {elapsed_time:,.0f} ns")
+    return result, elapsed_time
 
 
 def read_data_to_ll(ll: LinkedList) -> None:
@@ -483,17 +484,17 @@ print(f"{game_to_find if len(game_to_find) < 20 else game_to_find[:20].rstrip(' 
 
 
 # Task 4
-print("Multiple search:")
+print("Multiple linear search:")
 games_to_search_for = []
 print("Searching for:")
 for _ in range(10):
     game_to_find = random.choice(list(gamesLinkedList))
     game_name = game_to_find.data.get()[1]
-    print("\t", game_name)
     games_to_search_for.append(game_name)
 
-recd_times = []
+ls_recd_times = []
 for target in games_to_search_for:
+    print("\t", target)
     start = time.perf_counter()
 
     for game in gamesLinkedList:
@@ -502,15 +503,18 @@ for target in games_to_search_for:
 
     end = time.perf_counter()
     meas_time = (end - start) * 10 ** 9
-    recd_times.append(meas_time)
+    ls_recd_times.append(meas_time)
 
-print(f"\nAverage linear search time of gamesLinkedList across {len(recd_times)} iterations is:\n"
-      f"\t {sum(recd_times)/len(recd_times):,.0f} ns\n")
+ls_avg_time = sum(ls_recd_times) / len(ls_recd_times)
+print(f"\nAverage linear search time of gamesLinkedList across {len(ls_recd_times)} iterations is:\n"
+      f"\t {ls_avg_time:,.0f} ns\n")
 
 
 # Task 5
-timing_function(insertion_sort, gamesLinkedList, 1)     # insertion_sort by Name
-timing_function(quick_sort, gamesLinkedList, 1, 0, len(gamesLinkedList) - 1)    # quick_sort by Name
+print("\n*** Binary Search Test ***\n")
+
+_, is_time = timing_function(insertion_sort, gamesLinkedList, 1)     # insertion_sort by Name
+_, qs_time = timing_function(quick_sort, gamesLinkedList, 1, 0, len(gamesLinkedList) - 1)    # quick_sort by Name
 # sorting by the same col isn't very representative as an already sorted list is an edge case
 
 print("\nAfter sorting:\n"
@@ -520,8 +524,12 @@ for i in range(5):
     game_data = game.data
     print(game_data)
 
+
 bs_recd_times = []
+print("\nMultiple binary search:")
+print("Searching for:")
 for target in games_to_search_for:
+    print("\t", target)
     start = time.perf_counter()
 
     ll_binary_search(0, len(gamesLinkedList) - 1, gamesLinkedList, target)
@@ -530,10 +538,17 @@ for target in games_to_search_for:
     meas_time = (end - start) * 10 ** 9
     bs_recd_times.append(meas_time)
 
+bs_avg_time = sum(bs_recd_times)/len(bs_recd_times)
 print(f"\nAverage binary search time of gamesLinkedList across {len(bs_recd_times)} iterations is:\n"
-      f"\t {sum(bs_recd_times)/len(bs_recd_times):,.0f} ns\n")
+      f"\t {bs_avg_time:,.0f} ns\n")
 
-gamesPrimitiveList = timing_function(list, gamesLinkedList)
+
+# Task 7
+print("\n*** Breakpoint Test ***\n")
+
+# we must convert the Linked List to a list() as a LL sees no benefit from a binary search
+# the primitive python list is a variable-length array and will benefit from binary search
+gamesPrimitiveList, lst_time = timing_function(list, gamesLinkedList)
 
 lst_bs_recd_times = []
 for target in games_to_search_for:
@@ -545,5 +560,12 @@ for target in games_to_search_for:
     meas_time = (end - start) * 10 ** 9
     lst_bs_recd_times.append(meas_time)
 
+bs_lst_avg_time, convert = sum(lst_bs_recd_times) / len(lst_bs_recd_times)
 print(f"\nAverage binary search time of gamesPrimitiveList across {len(lst_bs_recd_times)} iterations is:\n"
-      f"\t {sum(lst_bs_recd_times) / len(lst_bs_recd_times):,.0f} ns\n")
+      f"\t {bs_lst_avg_time:,.0f} ns\n")
+
+m = 1
+while (qs_time + (bs_lst_avg_time * m)) > (ls_avg_time * m):
+    m += 1
+
+print(f"Break point m = {m} between repeated linear searches and sort-once & multiple binary searches.")
