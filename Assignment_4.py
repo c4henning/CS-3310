@@ -615,7 +615,7 @@ for target in games_to_search_for:
     meas_time = (end - start) * 10 ** 9
     lst_bs_recd_times.append(meas_time)
 
-bs_lst_avg_time, convert = sum(lst_bs_recd_times) / len(lst_bs_recd_times)
+bs_lst_avg_time = sum(lst_bs_recd_times) / len(lst_bs_recd_times)
 print(f"\nAverage binary search time of gamesPrimitiveList across {len(lst_bs_recd_times)} iterations is:\n"
       f"\t {bs_lst_avg_time:,.0f} ns\n")
 
